@@ -11,7 +11,7 @@ test('downloads the approved demo bytes and omits the sample secret', async ({ p
   await expect(page.locator('li', { hasText: 'SAMPLE-NOT-A-REAL-SECRET' })).toContainText('SENSITIVE_CONTENT');
   await page.getByRole('button', { name: 'Vorschau erzeugen' }).click();
   const previewHash = (await page.getByTestId('json-sha').innerText()).replace('JSON-SHA256: ', '').trim();
-  await expect(page.getByText('Nutzerentscheidung:')).toBeVisible();
+  await expect(page.locator('pre').first()).toContainText('Nutzerentscheidung:');
   await expect(page.locator('pre').first()).not.toContainText('SAMPLE-NOT-A-REAL-SECRET');
   await page.getByRole('button', { name: 'Freigeben' }).click();
   await page.getByRole('button', { name: 'Export bereitstellen' }).click();
@@ -27,7 +27,7 @@ test('downloads the approved demo bytes and omits the sample secret', async ({ p
   expect(manifest.toString('utf8')).toContain(previewHash);
   await page.reload();
   await page.goto('/#/overview');
-  await expect(page.getByText('Arbeitsbereich')).toBeVisible();
+  await expect(page.getByText('Arbeitsbereich', { exact: true })).toBeVisible();
   await expect(page.getByText('Gespräche: 0')).toBeVisible();
   expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
 });

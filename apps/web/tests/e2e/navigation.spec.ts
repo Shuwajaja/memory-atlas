@@ -42,12 +42,12 @@ test('opens the menu at 1024 and stacks at 390', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('button', { name: 'Menü' })).toBeVisible();
   await page.getByRole('button', { name: 'Menü' }).click();
-  await page.getByRole('link', { name: 'Import' }).click();
+  await page.getByRole('link', { name: 'Import', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Import' })).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.getByRole('heading', { name: 'Memory Atlas' })).toBeVisible();
   await page.setViewportSize({ width: 1440, height: 900 });
-  await expect(page.getByRole('link', { name: 'Quelle' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Quelle', exact: true })).toBeVisible();
 });
 
 test('imports a zip only as an unpack instruction', async ({ page }) => {

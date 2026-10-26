@@ -88,7 +88,21 @@ textarea { min-height: 96px; }
 .dialog { width: min(720px, 100%); max-height: min(860px, 100%); overflow: auto; background: var(--surface-raised); }
 .live { min-height: 1.5em; }
 .menu-button { display: none; }
-.graph-canvas { height: 520px; border: 1px solid var(--border); border-radius: var(--radius-card); overflow: hidden; }
+.graph-canvas { height: 520px; border: 1px solid var(--border); border-radius: var(--radius-card); overflow: hidden; background: var(--bg); }
+.graph-canvas .react-flow,
+.graph-canvas .react-flow__node,
+.graph-canvas .react-flow__node-default {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+.graph-canvas .react-flow__controls-button {
+  background: var(--surface-raised);
+  fill: var(--text);
+  color: var(--text);
+  border-bottom-color: var(--border);
+}
+.graph-canvas .react-flow__attribution { display: none; }
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

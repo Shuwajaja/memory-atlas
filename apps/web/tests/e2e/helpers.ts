@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { expect, type Locator, type Page } from '@playwright/test';
 
 const here = dirname(fileURLToPath(import.meta.url));
-export const repoRoot = resolve(here, '../../..');
+export const repoRoot = resolve(here, '../../../..');
 
 export function fixture(name: string): string {
   return resolve(repoRoot, 'memory-atlas-specc/fixtures', name);

@@ -9,7 +9,7 @@ test('shows role, date and branch, and acceptance does not raise evidence', asyn
   await importFixtures(page, 'chatgpt/01-linear.json');
   await page.goto('/#/source');
   await expect(page.getByText('Rolle: Nutzer')).toBeVisible();
-  await expect(page.getByText(/Gesendet: 2026-05-01/)).toBeVisible();
+  await expect(page.getByText(/Gesendet: 2026-05-01/).first()).toBeVisible();
   await expect(page.getByText('Zweig: ausgewählt').first()).toBeVisible();
   await chooseCard(page, 'Für Projekt Orion nutzen wir Alpha.', 'Alpha');
   await page.goto('/#/knowledge');

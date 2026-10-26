@@ -41,10 +41,10 @@ test('runs import, source, card, supersession, approval and export', async ({ pa
   await page.goto('/#/memory');
   await page.getByLabel(/Beta —/).check();
   await page.getByRole('button', { name: 'Auswahl speichern' }).click();
-  await expect(page.getByText('Auswahl gespeichert.')).toBeVisible();
+  await expect(page.getByText('Auswahl gespeichert.', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Vorschau erzeugen' }).click();
   const previewHash = (await page.getByTestId('json-sha').innerText()).replace('JSON-SHA256: ', '').trim();
-  await expect(page.getByText('Nutzerentscheidung: Ab jetzt nutzen wir Beta.')).toBeVisible();
+  await expect(page.locator('pre').first()).toContainText('Nutzerentscheidung: Ab jetzt nutzen wir Beta.');
   await expect(page.locator('pre').first()).not.toContainText('Für Projekt Orion nutzen wir Alpha.');
   await page.screenshot({ path: resolve(shots, '05-freigabe.png'), fullPage: true });
   await page.getByRole('button', { name: 'Freigeben' }).click();
@@ -65,7 +65,7 @@ test('runs import, source, card, supersession, approval and export', async ({ pa
   if (!projectPath) throw new Error('Projektdatei fehlt');
   await page.reload();
   await page.goto('/#/overview');
-  await expect(page.getByText('Arbeitsbereich')).toBeVisible();
+  await expect(page.getByText('Arbeitsbereich', { exact: true })).toBeVisible();
   await expect(page.getByText('Gespräche: 0')).toBeVisible();
   expect(await page.evaluate(() => localStorage.length + sessionStorage.length)).toBe(0);
   await page.getByLabel('Projekt öffnen').setInputFiles(projectPath);

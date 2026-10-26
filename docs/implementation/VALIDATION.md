@@ -1,19 +1,28 @@
 # Validierung
 
-Umgebung: Linux, Node v22.23.4, npm 10.9.9. Commit wird in der Pull-Request-Beschreibung genannt, sobald er existiert. Kein Windows-Rechner, deshalb ist das Windows-Gate offen.
+Umgebung: Linux 6.12, Node v22.23.4, npm 10.9.9, Chromium über Playwright 1.64.1. Kein Windows-Rechner. Die Befehle liefen auf dem Stand dieses Pull Requests.
 
-## Ausgeführt
+## Ausgeführt, bestanden
 
 | Befehl | Ergebnis |
 |---|---|
-| `python3 memory-atlas-specc/checks/check_bundle.py` | SUCCESS. Das Skript prüft nur das Spezifikationspaket, nicht die App. |
+| `python3 memory-atlas-specc/checks/check_bundle.py` | SUCCESS. Prüft das Spezifikationspaket, nicht die App. |
 | `npm --prefix apps/web run typecheck` | Exit 0 |
 | `npm --prefix apps/web run test -- --run` | 14 Dateien, 50 Tests, Exit 0 |
+| `npm --prefix apps/web run build:offline` | `apps/web/dist-offline/index.html`, etwa 1,47 MB, Inter als Data-URI |
+| `npm --prefix apps/web run test:e2e` | 14 Tests, Exit 0. Davon 13 gegen `http://127.0.0.1:4173` und einer gegen `file://.../dist-offline/index.html` |
 
-Die Unit- und Integrationstests lesen die Fixtures und die erwarteten Exportbytes. Sie vergleichen kanonische Vektoren, Importfälle FI01–FI13, Projektionen, Konflikte, das Datumsfenster, die Graphkante und die Demo-Exportbytes.
+Der Offline-Test meldet keine Konsolenfehler und keine Requests außer `file:`, `blob:` und `data:`. Der Gesamtlauf importiert `01-linear.json`, legt zwei Karten an, prüft dass „Annehmen“ den Beleg nicht anhebt, bestätigt Quelle und Datenschutz, löst den Konflikt, gibt frei und vergleicht die heruntergeladenen JSON-Bytes mit dem Vorschau-Hash. Nach Reload ist der Arbeitsbereich leer; die erneut geöffnete Projektdatei zeigt die Reviews und keine aktive Freigabe. `localStorage` und `sessionStorage` bleiben leer.
 
-## Noch nicht ausgeführt
+Axe auf Überblick, Import, Quelle, Wissenskarten, Freigabe und Beziehungen bei 1440×900, 1024×768 und 390×844, mit Reduced Motion: keine kritischen oder ernsten Befunde. Tastatur: Skip-Link, Fokusfalle und Rückkehr im Dialog „Sitzung leeren“, Konfliktdialog per Escape.
 
-Browser, Offline-Datei, Axe, Tastatur und die drei Viewports sind in `apps/web/tests/e2e` beschrieben und in diesem Stand noch nicht gelaufen. Leistungszahlen für 10.000 Nachrichten sind nicht gemessen. Ein reales anonymisiertes Claude- oder Gemini-Sample liegt nicht vor. Ein manueller Screenreader-Durchgang wurde nicht gemacht.
+Screenshots des Laufs: Import, Quelle, Wissenskarte, Alt/Neu, Freigabe, Export.
 
-Ergebnisse der Browserläufe werden hier nachgetragen, einschließlich Fehlschlägen.
+## Nicht ausgeführt oder nicht bestanden im Sinne eines offenen Gates
+
+- Windows-Start und Windows-Offline wurden nicht geprüft.
+- Kein reales anonymisiertes Claude-Sample. Das Produktflag `claude_profile_approved` bleibt falsch. Gemini wird nicht importiert.
+- Kein manueller Screenreader-Durchgang. Axe ersetzt ihn nicht.
+- Die Leistungsziele aus AC (10.000 Nachrichten, Perzentile für UI, Suche und Abbruch) wurden nicht gemessen. Es gibt keine Erfolgszahl dafür.
+- Grenzen von 100.000 Nachrichten und 256 MiB Snapshot sind im Code geprüft, aber nicht mit einem vollen Volumenlauf ausgeführt. 32 MiB plus ein Byte und die Elternkantengrenze sind als echte Tests vorhanden.
+- P2/P3, AC25–AC30 und MA-023–MA-028 sind nicht umgesetzt.

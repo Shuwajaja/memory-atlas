@@ -12,8 +12,8 @@ export function ImportView() {
   const abortRef = useRef<AbortController | null>(null);
   const workerRef = useRef<Worker | null>(null);
 
-  async function inspect(list: FileList | null): Promise<void> {
-    if (!list || list.length === 0) return;
+  async function inspect(list: File[]): Promise<void> {
+    if (list.length === 0) return;
     setLocalError(null);
     const files: { name: string; bytes: Uint8Array }[] = [];
     for (const file of list) {
@@ -68,8 +68,9 @@ export function ImportView() {
           accept=".json,.txt,application/json"
           multiple
           onChange={(event) => {
-            void inspect(event.target.files);
+            const selected = [...(event.target.files ?? [])];
             event.target.value = '';
+            void inspect(selected);
           }}
         />
       </label>
@@ -89,7 +90,7 @@ export function ImportView() {
           <p>Unveränderte Revisionen: {report.unchanged_revisions}</p>
           <p>Platzhalter: {report.placeholder_parts}</p>
           <p>Unbekannte Zeiten: {report.unknown_timestamps}</p>
-          {report.diagnostics.length > 0 ? <p className="status warn">Teilweise unterstützt: {report.diagnostics.length} Hinweise</p> : <p className="status ok">Ohne Hinweise übernommen werden kann.</p>}
+          {report.diagnostics.length > 0 ? <p className="status warn">Teilweise unterstützt: {report.diagnostics.length} Hinweise</p> : <p className="status ok">Keine Hinweise.</p>}
           <ul>
             {report.diagnostics.map((item, index) => (
               <li key={`${item.code}-${index}`}>{item.severity}: {item.code}</li>

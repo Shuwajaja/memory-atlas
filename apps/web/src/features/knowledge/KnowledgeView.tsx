@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { QueryTime, Sensitivity } from '../../domain/models.generated';
 import { projectClaim } from '../../domain/projection';
+import { useShell } from '../../selection';
 import { useAtlas } from '../../service-context';
 import { curationLabel, evidenceLabel, temporalLabel, utcNoon } from '../format';
 
@@ -10,6 +11,7 @@ interface KnowledgeViewProps {
 
 export function KnowledgeView({ at }: KnowledgeViewProps) {
   const { service, state } = useAtlas();
+  const { projectId, setSelection } = useShell();
   const [selected, setSelected] = useState<string | null>(null);
   const [due, setDue] = useState('2099-01-01');
   const [reason, setReason] = useState('manuell geprüft');
@@ -17,10 +19,17 @@ export function KnowledgeView({ at }: KnowledgeViewProps) {
   const [branchChecked, setBranchChecked] = useState(false);
   const [sensitivity, setSensitivity] = useState<Sensitivity>('shareable');
   const [aiOnly, setAiOnly] = useState(true);
-  const claims = state.snapshot.claims.filter((claim) => (aiOnly ? claim.category !== 'excluded_private' : true));
+  const claims = state.snapshot.claims.filter((claim) => {
+    if (projectId && claim.scope.project_id !== projectId) return false;
+    return aiOnly ? claim.category !== 'excluded_private' : true;
+  });
   const hiddenPrivate = state.snapshot.claims.length - state.snapshot.claims.filter((claim) => claim.category !== 'excluded_private').length;
   const active = claims.find((claim) => claim.id === selected) ?? claims[0] ?? null;
   const projection = active ? projectClaim(state.snapshot, active.id, at) : null;
+
+  useEffect(() => {
+    if (active) setSelection({ type: 'claim', id: active.id });
+  }, [active, setSelection]);
 
   return (
     <section className="stack">
@@ -48,7 +57,7 @@ export function KnowledgeView({ at }: KnowledgeViewProps) {
             );
           })}
         </div>
-        <aside className="panel stack">
+        <div className="panel stack">
           {active && projection ? (
             <>
               <h2>Prüfung</h2>
@@ -87,7 +96,7 @@ export function KnowledgeView({ at }: KnowledgeViewProps) {
               <p className="meta">Status bleibt {evidenceLabel(projection.evidence_status)}. Ausführung geprüft ist in P1 nicht erreichbar.</p>
             </>
           ) : <p>Keine Karte ausgewählt.</p>}
-        </aside>
+        </div>
       </div>
     </section>
   );

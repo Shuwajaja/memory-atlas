@@ -20,7 +20,7 @@ export async function importFixtures(page: Page, ...names: string[]): Promise<vo
 }
 
 export async function chooseCard(page: Page, text: string, value: string, statement?: string): Promise<void> {
-  const part = page.getByText(text, { exact: true });
+  const part = page.locator('#inhalt').getByText(text, { exact: true });
   await part.selectText();
   const card = part.locator('xpath=ancestor::article');
   await card.getByRole('button', { name: 'Auswahl als Wissenskarte' }).click();

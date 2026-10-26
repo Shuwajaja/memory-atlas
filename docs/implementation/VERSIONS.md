@@ -13,7 +13,8 @@ Node.js v22.23.4 und npm 10.9.9 in dieser Umgebung. Alle Pakete sind in `apps/we
 | @axe-core/playwright | 4.14.0 | AC20 |
 | ajv, ajv-formats | 8.20.0, 3.0.1 | JSON Schema draft 2020-12, lokal gebündelt |
 | @xyflow/react | 12.12.0 | Einzige Graphbibliothek, nur für die begrenzte Ansicht |
-| @fontsource/inter | 5.3.0 | Lokale Schrift, kein Laufzeitabruf |
+| @fontsource/plus-jakarta-sans | 5.3.0 | Lokale Sans, kein Laufzeitabruf. Latin und Latin-ext. |
+| @fontsource/jetbrains-mono | 5.3.0 | Lokale Mono für IDs. Latin und Latin-ext. |
 | vite-plugin-singlefile | 2.3.4 | Eine HTML-Datei für `file://` |
 | @types/node | 22.20.5 | Passt zur Node-22-Laufzeit |
 

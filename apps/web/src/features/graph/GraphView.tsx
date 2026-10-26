@@ -3,6 +3,7 @@ import { Background, ReactFlow, type Edge, type Node } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { buildGraph } from './graph-model';
 import type { QueryTime } from '../../domain/models.generated';
+import { useShell } from '../../selection';
 import { useAtlas } from '../../service-context';
 import { GraphList } from './GraphList';
 
@@ -13,6 +14,7 @@ interface GraphViewProps {
 
 export function GraphView({ at, reducedMotion }: GraphViewProps) {
   const { state } = useAtlas();
+  const { setSelection } = useShell();
   const [category, setCategory] = useState('');
   const [projectId, setProjectId] = useState('');
   const [mode, setMode] = useState<'graph' | 'list'>('graph');
@@ -34,7 +36,6 @@ export function GraphView({ at, reducedMotion }: GraphViewProps) {
     label: edge.label,
     animated: false,
   }));
-  const selectedClaim = state.snapshot.claims.find((claim) => claim.id === selected) ?? null;
 
   return (
     <section className="stack">
@@ -60,19 +61,24 @@ export function GraphView({ at, reducedMotion }: GraphViewProps) {
             zoomOnDoubleClick={!reducedMotion}
             proOptions={{ hideAttribution: true }}
             defaultEdgeOptions={{ animated: false }}
-            onNodeClick={(_event, node) => setSelected(node.id)}
+            onNodeClick={(_event, node) => choose(node.id)}
           >
             <Background />
           </ReactFlow>
         </div>
       ) : (
-        <GraphList nodes={model.nodes} edges={model.edges} selected={selected} onSelect={setSelected} />
+        <GraphList nodes={model.nodes} edges={model.edges} selected={selected} onSelect={choose} />
       )}
-      <aside className="panel stack">
-        <h2>Auswahl</h2>
-        {selectedClaim ? <p>{selectedClaim.text}</p> : <p>Kein Kartenknoten ausgewählt.</p>}
-        <a href="#/source">Zur Quelle</a>
-      </aside>
     </section>
   );
+
+  function choose(id: string): void {
+    setSelected(id);
+    if (state.snapshot.claims.some((claim) => claim.id === id)) {
+      setSelection({ type: 'claim', id });
+      return;
+    }
+    const node = model.nodes.find((item) => item.id === id);
+    setSelection(node ? { type: 'graph-node', id, label: node.label, kind: node.kind } : null);
+  }
 }

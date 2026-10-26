@@ -4,9 +4,11 @@ import { useAtlas } from '../../service-context';
 import { branchLabel, partText, roleLabel } from '../format';
 import { selectionWithin, type TextSpan } from '../selection';
 import { ClaimDialog } from '../knowledge/ClaimDialog';
+import { useShell } from '../../selection';
 
 export function ConversationView() {
   const { state } = useAtlas();
+  const { setSelection } = useShell();
   const snapshot = state.snapshot;
   const [conversationId, setConversationId] = useState<string | null>(snapshot.conversations[0]?.id ?? null);
   const [showAlternate, setShowAlternate] = useState(false);
@@ -50,7 +52,7 @@ export function ConversationView() {
           <ul className="stack">
             {snapshot.conversations.map((item) => (
               <li key={item.id}>
-                <button type="button" className="button" aria-pressed={item.id === activeId} onClick={() => setConversationId(item.id)}>
+                <button type="button" className="button" aria-pressed={item.id === activeId} onClick={() => { setConversationId(item.id); setSelection({ type: 'conversation', id: item.id }); }}>
                   {item.title} · {item.external_id}
                 </button>
               </li>
@@ -71,6 +73,7 @@ export function ConversationView() {
                     context={recentOnly && messageWindowRelation(message.sent_at, window) === 'before'}
                     branches={snapshot.nodes.filter((node) => node.message_revision_id === message.revision_id).map((node) => branchLabel(node.branch_membership))}
                     parts={message.parts.map((part, index) => ({ index, kind: part.kind, text: partText(part), selectable: part.kind === 'text' && part.text !== null }))}
+                    onInspect={() => setSelection({ type: 'message', revisionId: message.revision_id })}
                     onHide={() => setHidden((current) => [...current, message.revision_id])}
                     onSelect={(partIndex, root) => {
                       const span = selectionWithin(root);
@@ -93,10 +96,7 @@ export function ConversationView() {
             </div>
           ) : null}
         </div>
-        <aside className="panel">
-          <h2>Hinweis</h2>
-          <p>Text wird als Daten gezeigt und nicht ausgeführt. Medien bleiben Platzhalter.</p>
-        </aside>
+        <p className="note">Text wird als Daten gezeigt und nicht ausgeführt. Medien bleiben Platzhalter.</p>
       </div>
       {draft ? <ClaimDialog {...draft} onClose={() => setDraft(null)} /> : null}
     </section>
@@ -111,13 +111,14 @@ interface MessageCardProps {
   context: boolean;
   branches: string[];
   parts: { index: number; kind: string; text: string; selectable: boolean }[];
+  onInspect: () => void;
   onHide: () => void;
   onSelect: (partIndex: number, root: HTMLElement) => void;
 }
 
-function MessageCard({ messageId, role, sent, recorded, context, branches, parts, onHide, onSelect }: MessageCardProps) {
+function MessageCard({ messageId, role, sent, recorded, context, branches, parts, onInspect, onHide, onSelect }: MessageCardProps) {
   return (
-    <article className="card stack" data-message={messageId}>
+    <article className="card stack" data-message={messageId} onClick={onInspect}>
       <p>Rolle: {role}</p>
       <p>Gesendet: {sent}</p>
       <p>Aufgezeichnet: {recorded}</p>

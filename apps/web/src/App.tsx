@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Dialog } from './components/Dialog';
-import { downloadBytes } from './components/download';
 import type { AtlasSnapshot, QueryTime } from './domain/models.generated';
 import { ChangesView } from './features/changes/ChangesView';
 import { ConversationView } from './features/conversations/ConversationView';
+import { DoctorView } from './features/doctor/DoctorView';
 import { GraphView } from './features/graph/GraphView';
 import { ImportView } from './features/import/ImportView';
 import { KnowledgeView } from './features/knowledge/KnowledgeView';
@@ -11,8 +11,12 @@ import { MemoryView } from './features/memory-sets/MemoryView';
 import { OverviewView } from './features/overview/OverviewView';
 import { ReviewView } from './features/review/ReviewView';
 import { SettingsView } from './features/settings/SettingsView';
+import { Inspector } from './features/shell/Inspector';
+import { SearchDialog } from './features/shell/SearchDialog';
+import { Sidebar } from './features/shell/Sidebar';
 import { SourcesView } from './features/sources/SourcesView';
 import { TimelineView } from './features/timeline/TimelineView';
+import { ShellProvider, useShell } from './selection';
 import { nowQuery, useAtlas } from './service-context';
 
 const ROUTES = [
@@ -27,6 +31,7 @@ const ROUTES = [
   ['sources', 'Quellenlage'],
   ['memory', 'Freigabe'],
   ['settings', 'Einstellungen'],
+  ['doctor', 'Doctor'],
 ] as const;
 
 type RouteId = (typeof ROUTES)[number][0];
@@ -38,7 +43,16 @@ function parseRoute(hash: string): RouteId {
 }
 
 export function App() {
+  return (
+    <ShellProvider>
+      <Shell />
+    </ShellProvider>
+  );
+}
+
+function Shell() {
   const { service, state } = useAtlas();
+  const { searchOpen, setSearchOpen } = useShell();
   const [route, setRoute] = useState<RouteId>(() => parseRoute(window.location.hash));
   const [menuOpen, setMenuOpen] = useState(false);
   const [customAt, setCustomAt] = useState<QueryTime | null>(null);
@@ -46,6 +60,7 @@ export function App() {
   const [openError, setOpenError] = useState<string | null>(null);
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const at = customAt ?? nowQuery();
+  const routeLabel = ROUTES.find((item) => item[0] === route)?.[1] ?? 'Überblick';
 
   useEffect(() => {
     const onHash = () => setRoute(parseRoute(window.location.hash));
@@ -70,54 +85,65 @@ export function App() {
     return () => window.removeEventListener('beforeunload', onBeforeUnload);
   }, [state.dirty]);
 
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [setSearchOpen]);
+
   return (
-    <div className="app">
+    <div className="app-shell">
       <a className="skip" href="#inhalt">Zum Inhalt</a>
-      <header className="topbar">
-        <div className="brand">
-          <h1>Memory Atlas</h1>
-          {state.demo ? <p className="banner">Demo · synthetisch</p> : <p className="meta">{state.snapshot.workspace.title}</p>}
-        </div>
-        <div className="status-row">
-          <button type="button" className="button menu-button" aria-expanded={menuOpen} aria-controls="app-nav" onClick={() => setMenuOpen((open) => !open)}>Menü</button>
-          <span className={state.dirty ? 'status warn' : 'status ok'}>{state.dirty ? 'Nicht als Datei gespeichert' : 'Datei und Sitzung stimmen überein'}</span>
-          <button type="button" className="button" onClick={() => { const file = service.projectBytes(); downloadBytes(file.filename, file.bytes, 'application/json'); }}>Projekt herunterladen</button>
-          <label className="button">
-            Projekt öffnen
-            <input
-              className="sr"
-              type="file"
-              accept=".json,application/json"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                event.target.value = '';
-                if (!file) return;
-                void file.text().then((text) => {
-                  try {
-                    setPendingProject(service.previewProject(text));
-                    setOpenError(null);
-                  } catch (error) {
-                    setPendingProject(null);
-                    setOpenError(error instanceof Error ? error.message : 'Projekt ungültig.');
-                  }
-                });
-              }}
-            />
-          </label>
-        </div>
-      </header>
-      <div className="layout">
-        <nav id="app-nav" className={menuOpen ? 'nav open' : 'nav'} aria-label="Hauptnavigation">
-          {ROUTES.map(([id, label]) => (
-            <a key={id} href={`#/${id}`} aria-current={route === id ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>
-          ))}
-        </nav>
+      <Sidebar
+        route={route}
+        open={menuOpen}
+        at={at}
+        onNavigate={() => setMenuOpen(false)}
+        onOpen={(file) => {
+          if (!file) return;
+          void file.text().then((text) => {
+            try {
+              setPendingProject(service.previewProject(text));
+              setOpenError(null);
+            } catch (error) {
+              setPendingProject(null);
+              setOpenError(error instanceof Error ? error.message : 'Projekt ungültig.');
+            }
+          });
+        }}
+      />
+      <div className="center-shell">
+        <header className="topbar">
+          <div className="topbar-lead">
+            <button type="button" className="button menu-button" aria-expanded={menuOpen} aria-controls="app-nav" onClick={() => setMenuOpen((open) => !open)}>Menü</button>
+            <h1>Memory Atlas</h1>
+            <nav className="breadcrumb" aria-label="Brotkrumen">
+              <span>Memory Atlas</span>
+              <span aria-hidden="true">/</span>
+              <strong>{routeLabel}</strong>
+            </nav>
+            {state.demo ? <span className="badge-sample">Beispieldaten</span> : null}
+            {state.demo ? <p className="banner">Demo · synthetisch</p> : null}
+          </div>
+          <div className="top-actions">
+            <span className={state.dirty ? 'status warn' : 'status ok'}>{state.dirty ? 'Nicht als Datei gespeichert' : 'Datei und Sitzung stimmen überein'}</span>
+            <button type="button" className="button" onClick={() => setSearchOpen(true)}>Suchen</button>
+            <a className="button primary" href="#/import">Importieren</a>
+          </div>
+        </header>
         <main id="inhalt" className="main">
           <p id="notice" className="live" role="status">{state.notice ?? 'Bereit.'}</p>
           {state.error || openError ? <p id="error" className="live" role="alert">{state.error ?? openError}</p> : null}
           <View route={route} at={at} custom={customAt !== null} reducedMotion={reducedMotion} onTime={setCustomAt} />
         </main>
       </div>
+      <Inspector />
+      {searchOpen ? <SearchDialog /> : null}
       {pendingProject ? (
         <Dialog title="Projekt ersetzen" onClose={() => setPendingProject(null)}>
           <p>Das geöffnete Projekt ersetzt die Sitzung. Es wird nichts zusammengeführt. Importierte Freigaben bleiben untrusted.</p>
@@ -156,6 +182,8 @@ function View({ route, at, custom, reducedMotion, onTime }: { route: RouteId; at
       return <MemoryView />;
     case 'settings':
       return <SettingsView />;
+    case 'doctor':
+      return <DoctorView />;
     default: {
       const neverRoute: never = route;
       return <p>Unbekannte Ansicht {String(neverRoute)}</p>;

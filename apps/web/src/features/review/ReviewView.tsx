@@ -10,6 +10,7 @@ export function ReviewView({ at }: { at: QueryTime }) {
       <h2>Prüfung</h2>
       <p>Reviews werden ergänzt. Karten und Belege bleiben die ursprünglichen Datensätze.</p>
       {state.snapshot.reviews.length === 0 ? <p className="card">Noch kein Review.</p> : null}
+      <div className="table-scroll">
       <table>
         <thead>
           <tr><th>seq</th><th>Aktion</th><th>Ziel</th><th>Zeit</th><th>Grund</th></tr>
@@ -26,6 +27,7 @@ export function ReviewView({ at }: { at: QueryTime }) {
           ))}
         </tbody>
       </table>
+      </div>
       <ul>
         {state.snapshot.claims.map((claim) => {
           const view = projectClaim(state.snapshot, claim.id, at);

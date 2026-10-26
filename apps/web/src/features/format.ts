@@ -1,4 +1,4 @@
-import type { BranchMembership, ClaimProjection, MessageRole, Part } from '../domain/models.generated';
+import type { BranchMembership, Category, ClaimProjection, MessageRole, Part, RelationType, ReviewAction } from '../domain/models.generated';
 
 export function roleLabel(role: MessageRole): string {
   switch (role) {
@@ -94,4 +94,87 @@ export function partText(part: Part): string {
 
 export function utcNoon(day: string): string {
   return `${day}T12:00:00.000Z`;
+}
+
+export function categoryLabel(value: Category): string {
+  switch (value) {
+    case 'architecture':
+      return 'Architektur';
+    case 'projects':
+      return 'Projekte';
+    case 'agents':
+      return 'Agenten';
+    case 'models':
+      return 'Modelle';
+    case 'tools':
+      return 'Werkzeuge';
+    case 'research':
+      return 'Recherche';
+    case 'workflows':
+      return 'Abläufe';
+    case 'costs':
+      return 'Kosten';
+    case 'decisions':
+      return 'Entscheidungen';
+    case 'preferences':
+      return 'Präferenzen';
+    case 'other_ai':
+      return 'Weiteres';
+    case 'excluded_private':
+      return 'Privat';
+    default: {
+      const neverValue: never = value;
+      return neverValue;
+    }
+  }
+}
+
+export function relationLabel(value: RelationType): string {
+  switch (value) {
+    case 'supersedes':
+      return 'Aussage ersetzt';
+    case 'contradicts':
+      return 'Widerspruch';
+    case 'duplicate_of':
+      return 'Duplikat';
+    case 'revises':
+      return 'Fassung geändert';
+    case 'supports':
+      return 'Stützt eine Aussage';
+    case 'related_to':
+      return 'Verknüpft';
+    default: {
+      const neverValue: never = value;
+      return neverValue;
+    }
+  }
+}
+
+export function reviewActionLabel(value: ReviewAction): string {
+  switch (value) {
+    case 'accept':
+      return 'Aussage angenommen';
+    case 'reject':
+      return 'Aussage abgelehnt';
+    case 'exclude':
+      return 'Aussage ausgeschlossen';
+    case 'reopen':
+      return 'Prüfung wieder geöffnet';
+    case 'confirm_source':
+      return 'Quelle bestätigt';
+    case 'classify_privacy':
+      return 'Datenschutz gesetzt';
+    case 'renew_review':
+      return 'Frist erneuert';
+    case 'confirm_relation':
+      return 'Beziehung bestätigt';
+    case 'revoke_relation':
+      return 'Beziehung zurückgezogen';
+    case 'revoke_export':
+      return 'Freigabe zurückgezogen';
+    default: {
+      const neverValue: never = value;
+      return neverValue;
+    }
+  }
 }

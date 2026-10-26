@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { QueryTime, Sensitivity } from '../../domain/models.generated';
+import type { ClaimProjection, QueryTime, Sensitivity } from '../../domain/models.generated';
 import { projectClaim } from '../../domain/projection';
 import { useShell } from '../../selection';
 import { useAtlas } from '../../service-context';
@@ -44,20 +44,24 @@ export function KnowledgeView({ at }: KnowledgeViewProps) {
           {claims.map((claim) => {
             const view = projectClaim(state.snapshot, claim.id, at);
             return (
-              <article key={claim.id} className="card stack" aria-label={`${claim.value}: ${claim.text}`}>
-                <button type="button" className="button" aria-pressed={active?.id === claim.id} onClick={() => setSelected(claim.id)}>
+              <article key={claim.id} className={`knowledge-card${active?.id === claim.id ? ' is-selected' : ''}`} aria-label={`${claim.value}: ${claim.text}`}>
+                <button type="button" className="k-card-icon" aria-pressed={active?.id === claim.id} onClick={() => setSelected(claim.id)}>
                   {claim.value}
                 </button>
-                <p>{claim.text}</p>
-                <p>{curationLabel(view.curation)}</p>
-                <p>{evidenceLabel(view.evidence_status)}</p>
-                <p>{temporalLabel(view.temporal)}</p>
-                <p>Sensitivität: {view.sensitivity}</p>
+                <div className="k-card-content">
+                  <p className="k-card-excerpt">{claim.text}</p>
+                  <div className="card-meta">
+                    <span className={`status-tag ${temporalClass(view.temporal)}`}>{temporalLabel(view.temporal)}</span>
+                    <span className="meta-pill">{curationLabel(view.curation)}</span>
+                    <span className="meta-pill">{evidenceLabel(view.evidence_status)}</span>
+                    <span className="meta-pill">Sensitivität: {view.sensitivity}</span>
+                  </div>
+                </div>
               </article>
             );
           })}
         </div>
-        <div className="panel stack">
+        <div className="panel stack lab-card">
           {active && projection ? (
             <>
               <h2>Prüfung</h2>
@@ -100,4 +104,24 @@ export function KnowledgeView({ at }: KnowledgeViewProps) {
       </div>
     </section>
   );
+}
+
+function temporalClass(value: ClaimProjection['temporal']): string {
+  switch (value) {
+    case 'current':
+      return 'current';
+    case 'superseded':
+    case 'expired':
+      return 'outdated';
+    case 'disputed':
+      return 'conflict';
+    case 'future':
+      return 'planned';
+    case 'unknown':
+      return 'review';
+    default: {
+      const neverValue: never = value;
+      return neverValue;
+    }
+  }
 }

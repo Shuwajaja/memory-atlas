@@ -162,17 +162,32 @@ export class AtlasService {
 
   commitImport(): void {
     if (!this.staged) return;
-    try {
-      commitImport(this.store, this.staged);
+    const staged = this.staged;
+    this.run(() => {
+      commitImport(this.store, staged);
       this.staged = null;
       this.demo = false;
       this.resetApproval();
       this.notice = 'Import übernommen. Das Projekt ist noch nicht als Datei gespeichert.';
       this.error = null;
+      this.emit();
+    });
+  }
+
+  private run(work: () => void, onError?: () => void): void {
+    try {
+      work();
     } catch (error) {
+      onError?.();
       this.fail(error);
     }
-    this.emit();
+  }
+
+  private save(notice: string | undefined, produce: (snapshot: AtlasSnapshot) => AtlasSnapshot): void {
+    this.run(() => {
+      const next = produce(structuredClone(this.store.read()));
+      this.commitSnapshot(validateSnapshot(next), notice);
+    });
   }
 
   private nextEvent(action: ReviewAction, targetType: ReviewEvent['target_type'], targetId: string, reason: string, extra: Partial<ReviewEvent> = {}): ReviewEvent {
@@ -202,8 +217,7 @@ export class AtlasService {
   }
 
   createClaim(draft: ClaimDraft): void {
-    try {
-      const snapshot = structuredClone(this.store.read());
+    this.save('Kandidat angelegt. Annahme und Quellenprüfung sind noch offen.', (snapshot) => {
       const message = snapshot.messages.find((item) => item.revision_id === draft.messageRevisionId);
       const part = message?.parts[draft.partIndex];
       if (!message || !part || part.kind !== 'text' || part.text === null) throw new AtlasError('NOT_TEXT_PART', 'Nur ein Textteil kann belegt werden.');
@@ -252,77 +266,59 @@ export class AtlasService {
       if (!claim.text) throw new AtlasError('INVALID_CLAIM', 'Die Aussage fehlt.');
       snapshot.evidence.push(evidence);
       snapshot.claims.push(claim);
-      this.commitSnapshot(validateSnapshot(snapshot), 'Kandidat angelegt. Annahme und Quellenprüfung sind noch offen.');
-    } catch (error) {
-      this.fail(error);
-    }
+      return snapshot;
+    });
   }
 
   reviewClaim(action: ReviewAction, claimId: string, reason: string, extra: Partial<ReviewEvent> = {}): void {
-    try {
+    this.run(() => {
       const event = this.nextEvent(action, action === 'revoke_export' ? 'memory_set' : 'claim', claimId, reason, extra);
       this.commitSnapshot(appendReview(this.store.read(), event));
-    } catch (error) {
-      this.fail(error);
-    }
+    });
   }
 
   supersede(fromId: string, toId: string, effectiveAt: string, reason: string): void {
-    try {
-      const snapshot = structuredClone(this.store.read());
-      const relation: Relation = {
-        id: randomId('rel_'),
-        type: 'supersedes',
-        from_claim_id: fromId,
-        to_claim_id: toId,
-        effective_at: effectiveAt,
-        recorded_at: systemClock.now(),
-        reason,
-      };
-      snapshot.relations.push(relation);
-      const withRelation = validateSnapshot(snapshot);
+    this.run(() => {
+      const relation = this.addRelation('supersedes', fromId, toId, reason, effectiveAt);
       const event = this.nextEvent('confirm_relation', 'relation', relation.id, reason);
-      this.commitSnapshot(appendReview(withRelation, event), 'Ersetzung bestätigt. Frühere Freigaben gelten nicht mehr.');
-    } catch (error) {
-      this.fail(error);
-    }
+      this.commitSnapshot(appendReview(relation.snapshot, event), 'Ersetzung bestätigt. Frühere Freigaben gelten nicht mehr.');
+    });
   }
 
   relate(type: Relation['type'], fromId: string, toId: string, reason: string, effectiveAt: string | null, confirm: boolean): void {
-    try {
-      const snapshot = structuredClone(this.store.read());
-      const relation: Relation = {
-        id: randomId('rel_'),
-        type,
-        from_claim_id: fromId,
-        to_claim_id: toId,
-        effective_at: effectiveAt,
-        recorded_at: systemClock.now(),
-        reason,
-      };
-      snapshot.relations.push(relation);
-      let next = validateSnapshot(snapshot);
-      if (confirm) next = appendReview(next, this.nextEvent('confirm_relation', 'relation', relation.id, reason));
+    this.run(() => {
+      const relation = this.addRelation(type, fromId, toId, reason, effectiveAt);
+      const next = confirm ? appendReview(relation.snapshot, this.nextEvent('confirm_relation', 'relation', relation.id, reason)) : relation.snapshot;
       this.commitSnapshot(next, confirm ? 'Beziehung bestätigt.' : 'Beziehungsvorschlag gespeichert.');
-    } catch (error) {
-      this.fail(error);
-    }
+    });
+  }
+
+  private addRelation(type: Relation['type'], fromId: string, toId: string, reason: string, effectiveAt: string | null): { snapshot: AtlasSnapshot; id: string } {
+    const snapshot = structuredClone(this.store.read());
+    const relation: Relation = {
+      id: randomId('rel_'),
+      type,
+      from_claim_id: fromId,
+      to_claim_id: toId,
+      effective_at: effectiveAt,
+      recorded_at: systemClock.now(),
+      reason,
+    };
+    snapshot.relations.push(relation);
+    return { snapshot: validateSnapshot(snapshot), id: relation.id };
   }
 
   saveMemorySet(draft: MemorySetDraft): void {
-    try {
-      const snapshot = structuredClone(this.store.read());
+    this.save('Auswahl gespeichert. Eine frühere Freigabe ist ungültig.', (snapshot) => {
       const index = snapshot.memory_sets.findIndex((set) => set.id === draft.id);
       if (index >= 0) snapshot.memory_sets[index] = draft;
       else snapshot.memory_sets.push(draft);
-      this.commitSnapshot(validateSnapshot(snapshot), 'Auswahl gespeichert. Eine frühere Freigabe ist ungültig.');
-    } catch (error) {
-      this.fail(error);
-    }
+      return snapshot;
+    });
   }
 
   prepare(setId: string): void {
-    try {
+    this.run(() => {
       const set = this.store.read().memory_sets.find((item) => item.id === setId);
       if (!set) throw new AtlasError('SET_MISMATCH', 'Kein Memory-Set ausgewählt.');
       this.preview = prepareMemorySet(this.store.read(), set, systemClock);
@@ -330,51 +326,54 @@ export class AtlasService {
       this.error = null;
       this.notice = 'Vorschau erzeugt. Die Freigabe bindet genau diese Bytes.';
       this.emit();
-    } catch (error) {
+    }, () => {
       this.preview = null;
       this.approval = null;
-      this.fail(error);
-    }
+    });
   }
 
   approve(): void {
     if (!this.preview) return;
-    try {
-      this.approval = approveMemorySet(this.preview, 'local-user', systemClock, this.session);
+    this.run(() => {
+      this.approval = approveMemorySet(this.preview!, 'local-user', systemClock, this.session);
       this.error = null;
       this.notice = 'Stand freigegeben. Der Download prüft den Zustand erneut.';
       this.emit();
-    } catch (error) {
-      this.fail(error);
-    }
+    });
   }
 
   exportFiles(): ExportFiles | null {
     if (!this.preview || !this.approval) return null;
-    try {
-      const files = exportMemorySet(this.store.read(), this.preview, this.approval, systemClock, this.session);
-      const snapshot = structuredClone(this.store.read());
-      snapshot.export_history.push({
-        id: randomId('hist_'),
-        memory_set_id: this.preview.memory_set_id,
-        payload_sha256: this.preview.payload_sha256,
-        json_sha256: this.preview.json_sha256,
-        markdown_sha256: this.preview.markdown_sha256,
-        approved_at: this.approval.approved_at,
-        expires_at: this.approval.expires_at,
-        actor_id: this.approval.actor_id,
-      });
-      this.store.replace(this.store.currentSha256(), validateSnapshot(snapshot));
+    let files: ExportFiles | null = null;
+    this.run(() => {
+      const preview = this.preview;
+      const approval = this.approval;
+      if (!preview || !approval) return;
+      const produced = exportMemorySet(this.store.read(), preview, approval, systemClock, this.session);
+      this.saveExportHistory(preview, approval);
+      files = produced;
       this.notice = 'Export erzeugt. Die Historie autorisiert keinen weiteren Download.';
       this.approval = null;
       this.preview = null;
       this.error = null;
       this.emit();
-      return files;
-    } catch (error) {
-      this.fail(error);
-      return null;
-    }
+    });
+    return files;
+  }
+
+  private saveExportHistory(preview: MemoryPreview, approval: MemoryApproval): void {
+    const snapshot = structuredClone(this.store.read());
+    snapshot.export_history.push({
+      id: randomId('hist_'),
+      memory_set_id: preview.memory_set_id,
+      payload_sha256: preview.payload_sha256,
+      json_sha256: preview.json_sha256,
+      markdown_sha256: preview.markdown_sha256,
+      approved_at: approval.approved_at,
+      expires_at: approval.expires_at,
+      actor_id: approval.actor_id,
+    });
+    this.store.replace(this.store.currentSha256(), validateSnapshot(snapshot));
   }
 
   projectBytes(): { filename: string; bytes: Uint8Array } {

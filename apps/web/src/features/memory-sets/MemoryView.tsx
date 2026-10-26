@@ -3,12 +3,11 @@ import { evaluateEligibility } from '../../domain/export';
 import { randomId } from '../../domain/ids';
 import type { ExportFiles, MemorySetDraft } from '../../domain/models.generated';
 import { downloadBytes } from '../../components/download';
-import { useAtlas } from '../../service-context';
+import { useAtlas, useLiveQuery } from '../../service-context';
 
 export function MemoryView() {
   const { service, state } = useAtlas();
-  const now = new Date().toISOString();
-  const at = { valid_at: now, known_at: now };
+  const at = useLiveQuery();
   const [draft, setDraft] = useState<MemorySetDraft>(() => freshDraft(state.snapshot.workspace.id, state.snapshot.memory_sets[0]));
   const [bundle, setBundle] = useState<{ files: ExportFiles; jsonSha: string; markdownSha: string } | null>(null);
   const active = state.snapshot.memory_sets.find((set) => set.id === draft.id) ?? null;

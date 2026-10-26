@@ -9,7 +9,7 @@ export function Inspector() {
   const { selection } = useShell();
   const snapshot = state.snapshot;
   return (
-    <aside className="inspector" aria-label="Inspector">
+    <aside className="inspector" aria-label="Quelleninspektor" tabIndex={0}>
       <div className="ins-head">
         <p className="eyebrow">Inspector</p>
         <p className="ins-heading">{heading(snapshot, selection)}</p>
@@ -76,17 +76,23 @@ function ClaimBody({ snapshot, id }: { snapshot: AtlasSnapshot; id: string }) {
   const events = timelineForClaim(snapshot, id);
   return (
     <>
-      <p className="inspector-quote">{claim.text}</p>
-      <dl className="ins-pairs">
-        <div><dt>ID</dt><dd className="mono">{claim.id}</dd></div>
-        <div><dt>Wert</dt><dd>{claim.value}</dd></div>
-        <div><dt>Art</dt><dd>{claim.kind}</dd></div>
-        <div><dt>Herkunft</dt><dd>{claim.source_kind}</dd></div>
-        <div><dt>Kategorie</dt><dd>{claim.category}</dd></div>
-        <div><dt>Projekt</dt><dd className="mono">{claim.scope.project_id ?? 'keins'}</dd></div>
-        <div><dt>Aufgezeichnet</dt><dd className="mono">{claim.recorded_at}</dd></div>
-      </dl>
-      {quotes.length > 0 ? <blockquote className="source-quote">{quotes.map((item) => item.quote).join('\n')}</blockquote> : <p className="meta">Kein Belegzitat gespeichert.</p>}
+      <section className="ins-section">
+        <p className="ins-label">Herkunft</p>
+        <dl className="ins-pairs">
+          <div><dt>ID</dt><dd className="mono">{claim.id}</dd></div>
+          <div><dt>Wert</dt><dd>{claim.value}</dd></div>
+          <div><dt>Art</dt><dd>{claim.kind}</dd></div>
+          <div><dt>Quelle</dt><dd>{claim.source_kind}</dd></div>
+          <div><dt>Kategorie</dt><dd>{claim.category}</dd></div>
+          <div><dt>Projekt</dt><dd className="mono">{claim.scope.project_id ?? 'keins'}</dd></div>
+          <div><dt>Aufgezeichnet</dt><dd className="mono">{claim.recorded_at}</dd></div>
+        </dl>
+      </section>
+      <section className="ins-section">
+        <p className="ins-label">Zitat</p>
+        {quotes.length > 0 ? <blockquote className="source-quote">{quotes.map((item) => item.quote).join('\n')}</blockquote> : <p className="meta">Kein Belegzitat gespeichert.</p>}
+        <p className="inspector-quote">{claim.text}</p>
+      </section>
       <Timeline events={events} />
     </>
   );
@@ -168,7 +174,7 @@ function BatchBody({ snapshot, id }: { snapshot: AtlasSnapshot; id: string }) {
 function Timeline({ events }: { events: { id: string; at: string; title: string; detail: string }[] }) {
   return (
     <div className="ins-section">
-      <p className="ins-label">Zeitverlauf</p>
+      <p className="ins-label">Verlauf</p>
       {events.length === 0 ? <p className="meta">Keine Ereignisse für diese Auswahl.</p> : null}
       <ol className="timeline">
         {events.map((event) => (

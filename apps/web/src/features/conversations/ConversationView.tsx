@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { sixCalendarMonths, messageWindowRelation } from '../../domain/date-window';
-import { useAtlas } from '../../service-context';
+import { useAtlas, useLiveQuery } from '../../service-context';
 import { branchLabel, partText, roleLabel } from '../format';
 import { selectionWithin, type TextSpan } from '../selection';
 import { ClaimDialog } from '../knowledge/ClaimDialog';
@@ -10,13 +10,14 @@ export function ConversationView() {
   const { state } = useAtlas();
   const { setSelection } = useShell();
   const snapshot = state.snapshot;
+  const live = useLiveQuery();
   const [conversationId, setConversationId] = useState<string | null>(snapshot.conversations[0]?.id ?? null);
   const [showAlternate, setShowAlternate] = useState(false);
   const [showUnknown, setShowUnknown] = useState(true);
   const [recentOnly, setRecentOnly] = useState(false);
   const [hidden, setHidden] = useState<string[]>([]);
   const [draft, setDraft] = useState<{ messageRevisionId: string; nodeId: string; partIndex: number; role: typeof snapshot.messages[number]['role']; span: TextSpan } | null>(null);
-  const window = useMemo(() => sixCalendarMonths(new Date(), snapshot.workspace.timezone), [snapshot.workspace.timezone, snapshot.snapshot_id]);
+  const window = useMemo(() => sixCalendarMonths(new Date(live.valid_at), snapshot.workspace.timezone), [live.valid_at, snapshot.workspace.timezone]);
   const activeId = snapshot.conversations.some((item) => item.id === conversationId) ? conversationId : snapshot.conversations[0]?.id ?? null;
   const conversation = snapshot.conversations.find((item) => item.id === activeId) ?? null;
 

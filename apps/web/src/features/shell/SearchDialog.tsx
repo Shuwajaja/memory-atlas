@@ -1,5 +1,4 @@
-import { useMemo, useState } from 'react';
-import { Dialog } from '../../components/Dialog';
+import { useMemo } from 'react';
 import type { AtlasSnapshot } from '../../domain/models.generated';
 import { partText } from '../format';
 import type { Selection } from '../../selection';
@@ -16,25 +15,13 @@ interface Hit {
 
 const limit = 30;
 
-export function SearchDialog() {
+export function SearchPanel({ query, onPick }: { query: string; onPick: () => void }) {
   const { state } = useAtlas();
-  const { setSearchOpen, setSelection } = useShell();
-  const [query, setQuery] = useState('');
+  const { setSelection } = useShell();
   const hits = useMemo(() => searchSnapshot(state.snapshot, query), [state.snapshot, query]);
   const shown = hits.slice(0, limit);
-
   return (
-    <Dialog title="Suchen" onClose={() => setSearchOpen(false)}>
-      <label>
-        Wissen durchsuchen
-        <input
-          type="search"
-          value={query}
-          autoComplete="off"
-          placeholder="Karte, Gespräch, Beleg, Review"
-          onChange={(event) => setQuery(event.target.value)}
-        />
-      </label>
+    <div className="search-panel">
       <p className="meta">{query.trim().length < 2 ? 'Mindestens zwei Zeichen.' : `${hits.length} Treffer im geladenen Bestand.`}</p>
       <ul className="stack search-results">
         {shown.map((hit) => (
@@ -44,7 +31,7 @@ export function SearchDialog() {
               href={hit.href}
               onClick={() => {
                 setSelection(hit.selection);
-                setSearchOpen(false);
+                onPick();
               }}
             >
               <strong>{hit.title}</strong>
@@ -54,7 +41,7 @@ export function SearchDialog() {
         ))}
       </ul>
       {hits.length > shown.length ? <p className="meta">Weitere {hits.length - shown.length} Treffer sind nicht gelistet.</p> : null}
-    </Dialog>
+    </div>
   );
 }
 

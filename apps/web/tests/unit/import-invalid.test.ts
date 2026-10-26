@@ -31,11 +31,19 @@ describe('invalid inputs', () => {
   it('allows JSON depth 128 and rejects 129', () => {
     let allowed = '0';
     for (let index = 0; index < 128; index += 1) allowed = `[${allowed}]`;
-    expect(parseJsonText(allowed).value).toBeTruthy();
+    const nested = parseJsonText(allowed).value;
+    let depth = 0;
+    let cursor: unknown = nested;
+    while (Array.isArray(cursor)) {
+      depth += 1;
+      cursor = cursor[0];
+    }
+    expect(depth).toBe(128);
+    expect(cursor).toBe(0);
     let rejected = '0';
     for (let index = 0; index < 129; index += 1) rejected = `[${rejected}]`;
     expect(() => parseJsonText(rejected)).toThrowError(expect.objectContaining({ code: 'JSON_DEPTH' }));
-    expect(() => parseJsonText('{"a":"{\\"depth\\":[1]}"}')).not.toThrow();
+    expect(parseJsonText('{"a":"{\\"depth\\":[1]}"}').value).toEqual({ a: '{"depth":[1]}' });
   });
 
   it('rejects invalid UTF-8, archives and oversized files without a partial store change', async () => {

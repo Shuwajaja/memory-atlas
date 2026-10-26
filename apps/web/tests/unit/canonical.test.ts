@@ -10,7 +10,7 @@ describe('canonical bytes', () => {
     const vectors = JSON.parse(readFileSync(resolve(exampleRoot, 'canonical-vectors.json'), 'utf8')) as {
       vectors: { name: string; input: unknown; canonical_text: string; utf8_hex: string; sha256: string }[];
     };
-    expect(vectors.vectors.length).toBeGreaterThan(0);
+    expect(vectors.vectors.map((vector) => vector.name)).toEqual(['unicode', 'order', 'controls']);
     for (const vector of vectors.vectors) {
       const text = canonicalize(vector.input);
       expect(text).toBe(vector.canonical_text);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Dialog } from './components/Dialog';
 import type { AtlasSnapshot, QueryTime } from './domain/models.generated';
 import { ChangesView } from './features/changes/ChangesView';
@@ -12,12 +12,13 @@ import { OverviewView } from './features/overview/OverviewView';
 import { ReviewView } from './features/review/ReviewView';
 import { SettingsView } from './features/settings/SettingsView';
 import { Inspector } from './features/shell/Inspector';
-import { SearchDialog } from './features/shell/SearchDialog';
+import { SearchPanel } from './features/shell/SearchDialog';
+import { Icon } from './features/shell/icons';
 import { Sidebar } from './features/shell/Sidebar';
 import { SourcesView } from './features/sources/SourcesView';
 import { TimelineView } from './features/timeline/TimelineView';
-import { ShellProvider, useShell } from './selection';
-import { nowQuery, useAtlas } from './service-context';
+import { ShellProvider } from './selection';
+import { useAtlas, useLiveQuery } from './service-context';
 
 const ROUTES = [
   ['overview', 'Überblick'],
@@ -52,14 +53,16 @@ export function App() {
 
 function Shell() {
   const { service, state } = useAtlas();
-  const { searchOpen, setSearchOpen } = useShell();
+  const liveAt = useLiveQuery();
   const [route, setRoute] = useState<RouteId>(() => parseRoute(window.location.hash));
   const [menuOpen, setMenuOpen] = useState(false);
   const [customAt, setCustomAt] = useState<QueryTime | null>(null);
   const [pendingProject, setPendingProject] = useState<AtlasSnapshot | null>(null);
   const [openError, setOpenError] = useState<string | null>(null);
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  const at = customAt ?? nowQuery();
+  const [query, setQuery] = useState('');
+  const searchRef = useRef<HTMLInputElement>(null);
+  const at = customAt ?? liveAt;
   const routeLabel = ROUTES.find((item) => item[0] === route)?.[1] ?? 'Überblick';
 
   useEffect(() => {
@@ -89,12 +92,12 @@ function Shell() {
     const onKey = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
-        setSearchOpen(true);
+        searchRef.current?.focus();
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [setSearchOpen]);
+  }, []);
 
   return (
     <div className="app-shell">
@@ -121,10 +124,9 @@ function Shell() {
         <header className="topbar">
           <div className="topbar-lead">
             <button type="button" className="button menu-button" aria-expanded={menuOpen} aria-controls="app-nav" onClick={() => setMenuOpen((open) => !open)}>Menü</button>
-            <h1>Memory Atlas</h1>
             <nav className="breadcrumb" aria-label="Brotkrumen">
-              <span>Memory Atlas</span>
-              <span aria-hidden="true">/</span>
+              <h1>Memory Atlas</h1>
+              <span className="breadcrumb-divider" aria-hidden="true">/</span>
               <strong>{routeLabel}</strong>
             </nav>
             {state.demo ? <span className="badge-sample">Beispieldaten</span> : null}
@@ -132,8 +134,24 @@ function Shell() {
           </div>
           <div className="top-actions">
             <span className={state.dirty ? 'status warn' : 'status ok'}>{state.dirty ? 'Nicht als Datei gespeichert' : 'Datei und Sitzung stimmen überein'}</span>
-            <button type="button" className="button" onClick={() => setSearchOpen(true)}>Suchen</button>
-            <a className="button primary" href="#/import">Importieren</a>
+            <div className="search-slot">
+              <label className="search-wrap">
+                <Icon name="search" />
+                <input
+                  ref={searchRef}
+                  id="global-search"
+                  type="search"
+                  value={query}
+                  placeholder="Wissen durchsuchen ..."
+                  aria-label="Wissen durchsuchen"
+                  autoComplete="off"
+                  onChange={(event) => setQuery(event.target.value)}
+                />
+                <kbd>⌘ K</kbd>
+              </label>
+              {query.trim().length >= 2 ? <SearchPanel query={query} onPick={() => setQuery('')} /> : null}
+            </div>
+            <a className="button primary" href="#/import"><Icon name="plus" /> Importieren</a>
           </div>
         </header>
         <main id="inhalt" className="main">
@@ -141,9 +159,12 @@ function Shell() {
           {state.error || openError ? <p id="error" className="live" role="alert">{state.error ?? openError}</p> : null}
           <View route={route} at={at} custom={customAt !== null} reducedMotion={reducedMotion} onTime={setCustomAt} />
         </main>
+        <footer className="app-footer">
+          <span>MEMORY ATLAS / EXPERIMENTAL INTERFACE</span>
+          <span><span className="footer-dot" aria-hidden="true" /> Read-only Demo-Daten · lokaler JSON-Import</span>
+        </footer>
       </div>
       <Inspector />
-      {searchOpen ? <SearchDialog /> : null}
       {pendingProject ? (
         <Dialog title="Projekt ersetzen" onClose={() => setPendingProject(null)}>
           <p>Das geöffnete Projekt ersetzt die Sitzung. Es wird nichts zusammengeführt. Importierte Freigaben bleiben untrusted.</p>
@@ -161,7 +182,7 @@ function Shell() {
 function View({ route, at, custom, reducedMotion, onTime }: { route: RouteId; at: QueryTime; custom: boolean; reducedMotion: boolean; onTime: (next: QueryTime | null) => void }) {
   switch (route) {
     case 'overview':
-      return <OverviewView />;
+      return <OverviewView at={at} />;
     case 'import':
       return <ImportView />;
     case 'source':

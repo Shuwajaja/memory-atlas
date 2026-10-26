@@ -1,0 +1,72 @@
+{
+  "payload": {
+    "schema_version": "1.0.0",
+    "memory_set_id": "set_orion_ready",
+    "policy_version": "1.0",
+    "generated_at": "2026-10-26T16:15:00Z",
+    "expires_at": "2026-10-27T16:15:00Z",
+    "scope": {
+      "workspace_id": "ws_demo",
+      "project_id": "project_orion",
+      "environment": "local",
+      "consumer_id": "demo-cursor",
+      "purpose": "Projektkontext"
+    },
+    "context_only": true,
+    "entries": [
+      {
+        "claim_id": "clm_beta",
+        "claim_sha256": "83b7334e2fb3ca4d2a1fb9173a51f54f37de790af9eb3f5ed1fa88efddc0a828",
+        "statement": "Nutzerentscheidung: Ab dem 23.10.2026 nutzen wir Beta als Supervisor statt Alpha.",
+        "kind": "decision",
+        "source_kind": "user_decision",
+        "modality": "asserted",
+        "scope": {
+          "workspace_id": "ws_demo",
+          "project_id": "project_orion",
+          "environment": "local"
+        },
+        "valid_from": "2026-10-23T10:00:00Z",
+        "valid_to": null,
+        "evidence_status": "source_correlated",
+        "review_due_at": "2027-04-24T16:00:00Z",
+        "citations": [
+          {
+            "source_file_id": "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d",
+            "message_revision_id": "rev_280b2722542ef979aa53546953537f28a722ce37650b7d8ff7e4eacb107df841",
+            "quote_sha256": "d5193f49b82cd6e46af7f2066a845963283cc1e2c6ce8ba22665fa38af98537e"
+          }
+        ],
+        "representation": "user_decision",
+        "source_asserted_at": "2026-10-23T10:00:00Z"
+      },
+      {
+        "claim_id": "clm_language",
+        "claim_sha256": "d7674e74e9277e4e2e7843bfcacf4076e66940ad2ebcc94531e58e05fedaa206",
+        "statement": "Nutzerentscheidung: Die Oberfläche für Projekt Orion soll Deutsch verwenden.",
+        "kind": "preference",
+        "source_kind": "user_decision",
+        "modality": "asserted",
+        "scope": {
+          "workspace_id": "ws_demo",
+          "project_id": "project_orion",
+          "environment": "local"
+        },
+        "valid_from": null,
+        "valid_to": null,
+        "evidence_status": "source_correlated",
+        "review_due_at": "2027-04-24T16:00:00Z",
+        "citations": [
+          {
+            "source_file_id": "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d",
+            "message_revision_id": "rev_20f2eb09382c66dc3bba78704e0017d1ae7ae3191985ae007446fd43c4fb7987",
+            "quote_sha256": "c04628f27961c95a4a19e4017c60683d435090775d59485761c080fc31870195"
+          }
+        ],
+        "representation": "user_decision",
+        "source_asserted_at": "2026-10-25T10:00:00Z"
+      }
+    ]
+  },
+  "payload_sha256": "0c0613b09ca2f94075250c38c5e775cc0a46a879487091a55fd75bd7766c750a"
+}

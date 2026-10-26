@@ -1,0 +1,56 @@
+[
+  {
+    "id": "missing-001",
+    "title": "Synthetisches Testgespräch",
+    "create_time": null,
+    "current_node": "m2",
+    "mapping": {
+      "root": {
+        "id": "root",
+        "parent": null,
+        "children": [
+          "m1"
+        ],
+        "message": null
+      },
+      "m1": {
+        "id": "m1",
+        "parent": "root",
+        "children": [
+          "m2"
+        ],
+        "message": {
+          "id": "m1",
+          "author": {
+            "role": "user"
+          },
+          "create_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Datum ist unbekannt."
+            ]
+          }
+        }
+      },
+      "m2": {
+        "id": "m2",
+        "parent": "m1",
+        "children": [],
+        "message": {
+          "id": "m2",
+          "author": {
+            "role": "assistant"
+          },
+          "create_time": "not-a-time",
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Auch hier fehlt das Datum."
+            ]
+          }
+        }
+      }
+    }
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cycle-001",
+    "title": "Synthetisches Testgespräch",
+    "create_time": 1782900000.0,
+    "current_node": "m2",
+    "mapping": {
+      "m1": {
+        "id": "m1",
+        "parent": "m2",
+        "children": [
+          "m2"
+        ],
+        "message": {
+          "id": "m1",
+          "author": {
+            "role": "user"
+          },
+          "create_time": 1782900000.0,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Erste Nachricht."
+            ]
+          }
+        }
+      },
+      "m2": {
+        "id": "m2",
+        "parent": "m1",
+        "children": [
+          "m1"
+        ],
+        "message": {
+          "id": "m2",
+          "author": {
+            "role": "assistant"
+          },
+          "create_time": 1782900001.0,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Zweite Nachricht."
+            ]
+          }
+        }
+      }
+    }
+  }
+]

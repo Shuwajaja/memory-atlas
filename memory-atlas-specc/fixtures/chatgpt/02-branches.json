@@ -1,0 +1,75 @@
+[
+  {
+    "id": "branches-001",
+    "title": "Synthetisches Testgespräch",
+    "create_time": 1780315200.0,
+    "current_node": "alt",
+    "mapping": {
+      "root": {
+        "id": "root",
+        "parent": null,
+        "children": [
+          "m1"
+        ],
+        "message": null
+      },
+      "m1": {
+        "id": "m1",
+        "parent": "root",
+        "children": [
+          "m2",
+          "alt"
+        ],
+        "message": {
+          "id": "m1",
+          "author": {
+            "role": "user"
+          },
+          "create_time": 1780315200.0,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Welche Option passt?"
+            ]
+          }
+        }
+      },
+      "m2": {
+        "id": "m2",
+        "parent": "m1",
+        "children": [],
+        "message": {
+          "id": "m2",
+          "author": {
+            "role": "assistant"
+          },
+          "create_time": 1780315201.0,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Option A."
+            ]
+          }
+        }
+      },
+      "alt": {
+        "id": "alt",
+        "parent": "m1",
+        "children": [],
+        "message": {
+          "id": "alt",
+          "author": {
+            "role": "assistant"
+          },
+          "create_time": 1780315202.0,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Option B."
+            ]
+          }
+        }
+      }
+    }
+  }
+]

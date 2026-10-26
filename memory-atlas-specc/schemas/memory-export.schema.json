@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://memory-atlas.invalid/schemas/memory-export/1.0.0",
+  "title": "Memory Atlas scoped memory export",
+  "description": "No raw chats, paths, API keys or source quotes. Current human approval and runtime policy remain mandatory.",
+  "$ref": "#/$defs/MemoryEnvelope",
+  "$defs": {
+    "Citation": {
+      "type": "object",
+      "properties": {
+        "source_file_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quote_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "source_file_id",
+        "message_revision_id",
+        "quote_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "MemoryEntry": {
+      "type": "object",
+      "properties": {
+        "claim_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "decision",
+            "preference",
+            "fact",
+            "project_status",
+            "task",
+            "research_finding",
+            "open_question"
+          ]
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "user_decision",
+            "user_report",
+            "assistant_recommendation",
+            "assistant_execution_claim",
+            "tool_observation",
+            "external_reference",
+            "inference"
+          ]
+        },
+        "modality": {
+          "type": "string",
+          "enum": [
+            "asserted",
+            "proposed",
+            "hypothetical",
+            "negated",
+            "quoted",
+            "uncertain"
+          ]
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "workspace_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "project_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "environment": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "workspace_id",
+            "project_id",
+            "environment"
+          ],
+          "additionalProperties": false
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_status": {
+          "type": "string",
+          "enum": [
+            "source_correlated",
+            "execution_verified"
+          ]
+        },
+        "review_due_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Citation"
+          }
+        },
+        "representation": {
+          "type": "string",
+          "enum": [
+            "user_decision",
+            "dated_report",
+            "proposal",
+            "research_note"
+          ]
+        },
+        "source_asserted_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "claim_id",
+        "claim_sha256",
+        "statement",
+        "kind",
+        "source_kind",
+        "modality",
+        "scope",
+        "valid_from",
+        "valid_to",
+        "evidence_status",
+        "review_due_at",
+        "citations",
+        "representation",
+        "source_asserted_at"
+      ],
+      "additionalProperties": false
+    },
+    "MemoryPayload": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "memory_set_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "policy_version": {
+          "const": "1.0"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "workspace_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "project_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "environment": {
+              "type": "string",
+              "minLength": 1
+            },
+            "consumer_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "purpose": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "workspace_id",
+            "project_id",
+            "environment",
+            "consumer_id",
+            "purpose"
+          ],
+          "additionalProperties": false
+        },
+        "context_only": {
+          "const": true
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/MemoryEntry"
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "memory_set_id",
+        "policy_version",
+        "generated_at",
+        "expires_at",
+        "scope",
+        "context_only",
+        "entries"
+      ],
+      "additionalProperties": false
+    },
+    "MemoryEnvelope": {
+      "type": "object",
+      "properties": {
+        "payload": {
+          "$ref": "#/$defs/MemoryPayload"
+        },
+        "payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "payload",
+        "payload_sha256"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "status": "Expected results; importer not implemented in this package",
+  "cases": [
+    {
+      "id": "FI01",
+      "files": [
+        "chatgpt/01-linear.json"
+      ],
+      "profile": "chatgpt-mapping-v1",
+      "expect": {
+        "conversations": 1,
+        "nodes": 3,
+        "messages": 2,
+        "selected_external_message_ids": [
+          "m1",
+          "m2"
+        ],
+        "null_roots": 1
+      }
+    },
+    {
+      "id": "FI02",
+      "files": [
+        "chatgpt/02-branches.json"
+      ],
+      "expect": {
+        "messages": 3,
+        "selected_external_message_ids": [
+          "m1",
+          "alt"
+        ],
+        "alternate_external_message_ids": [
+          "m2"
+        ]
+      }
+    },
+    {
+      "id": "FI03",
+      "files": [
+        "chatgpt/03-missing-time.json"
+      ],
+      "expect": {
+        "messages": 2,
+        "unknown_timestamps": 2,
+        "diagnostic_codes": [
+          "MISSING_TIMESTAMP",
+          "INVALID_TIMESTAMP"
+        ]
+      }
+    },
+    {
+      "id": "FI04",
+      "files": [
+        "chatgpt/04-multimodal.json"
+      ],
+      "expect": {
+        "messages": 2,
+        "placeholder_parts": 2,
+        "no_media_requests": true
+      }
+    },
+    {
+      "id": "FI05",
+      "files": [
+        "chatgpt/05-cycle.json"
+      ],
+      "expect": {
+        "messages": 2,
+        "selected_external_message_ids": [],
+        "unknown_branch_messages": 2,
+        "diagnostic_codes": [
+          "PARENT_CYCLE"
+        ]
+      }
+    },
+    {
+      "id": "FI06",
+      "files": [
+        "chatgpt/01-linear.json",
+        "chatgpt/06-revision.json"
+      ],
+      "mode": "sequential",
+      "expect": {
+        "logical_messages": 2,
+        "message_revisions": 3,
+        "old_revision_retained": true
+      }
+    },
+    {
+      "id": "FI07",
+      "files": [
+        "chatgpt/07-hostile.json"
+      ],
+      "expect": {
+        "messages": 2,
+        "script_executions": 0,
+        "network_requests": 0,
+        "prototype_pollution": false
+      }
+    },
+    {
+      "id": "FI08",
+      "files": [
+        "chatgpt/08-split-a.json",
+        "chatgpt/09-split-b.json"
+      ],
+      "expect": {
+        "conversations": 2,
+        "logical_messages": 4,
+        "message_revisions": 4
+      }
+    },
+    {
+      "id": "FI09",
+      "files": [
+        "chatgpt/01-linear.json",
+        "chatgpt/01-linear.json"
+      ],
+      "mode": "sequential",
+      "expect": {
+        "second_new_logical_messages": 0,
+        "second_new_revisions": 0
+      }
+    },
+    {
+      "id": "FI10",
+      "files": [
+        "claude/01-content.json"
+      ],
+      "profile_approved": false,
+      "expect": {
+        "error": "PROFILE_NOT_APPROVED",
+        "store_changed": false
+      }
+    },
+    {
+      "id": "FI11",
+      "files": [
+        "claude/01-content.json"
+      ],
+      "profile_approved": true,
+      "synthetic_only": true,
+      "expect": {
+        "messages": 2,
+        "text_occurrences_of_first_message": 1,
+        "placeholder_parts": 1,
+        "branch_membership": "unknown"
+      }
+    },
+    {
+      "id": "FI12",
+      "files": [
+        "claude/02-unknown.json"
+      ],
+      "expect": {
+        "error": "UNSUPPORTED_PROFILE",
+        "store_changed": false
+      }
+    },
+    {
+      "id": "FI13",
+      "files": [
+        "duplicate-key.txt"
+      ],
+      "expect": {
+        "error": "DUPLICATE_JSON_KEY",
+        "store_changed": false
+      }
+    }
+  ]
+}

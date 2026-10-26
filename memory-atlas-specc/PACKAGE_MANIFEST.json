@@ -1,0 +1,232 @@
+{
+  "package": "memory-atlas-specc",
+  "version": "1.0",
+  "date": "2026-10-26",
+  "files": [
+    {
+      "path": "CURSOR_START.md",
+      "bytes": 4923,
+      "sha256": "3a127893e27f3987ff6bb6918e3b61b121a433767c2352996872fa67b5a3119b"
+    },
+    {
+      "path": "DESIGN.md",
+      "bytes": 7092,
+      "sha256": "7eea129bbfbe67d2c27945ff1aad84e657fc012509d8ab405a0696de1172b222"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5104,
+      "sha256": "7c9b66cd4ab2463e674f15327777376e0f82c457677171ffd6f6f83cd720e992"
+    },
+    {
+      "path": "SPECC.md",
+      "bytes": 11504,
+      "sha256": "1efb8aa5c4d3c89dac7bd0d0591efbe04aede3b6be0fa870945ff8ec4cb342ba"
+    },
+    {
+      "path": "checks/check_bundle.py",
+      "bytes": 12195,
+      "sha256": "e980d631080dbd304c30e05e15e3087e595ede26c5df0da60237fcf06c71ac2e"
+    },
+    {
+      "path": "contracts/domain.ts",
+      "bytes": 5429,
+      "sha256": "98fb0e28871b10d3fbf6abdc6dc27e4122c90059a866fc8d2268a8bca25813f5"
+    },
+    {
+      "path": "docs/ACCEPTANCE.md",
+      "bytes": 16604,
+      "sha256": "38e20d5fe07d5fe269d5c52d8013ef45c12ae1ee3cb7a68f96d49bd2b9d38112"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 9226,
+      "sha256": "b4eab4a01cac72f38d90943046a39c5cfd660d57b53b36ece85568ecdc934022"
+    },
+    {
+      "path": "docs/DATA_MODEL.md",
+      "bytes": 12078,
+      "sha256": "d71fea9d70f0772efff883dd0249528d6df00be1efb45edc255d8180a810bef9"
+    },
+    {
+      "path": "docs/DECISIONS.md",
+      "bytes": 2739,
+      "sha256": "8fa99f021b11d334ea5c8260ddce44efd7aedf662a903a0fd5612251a90fff93"
+    },
+    {
+      "path": "docs/IMPORTS.md",
+      "bytes": 11653,
+      "sha256": "e1d35f0a8c2b8cf0dcfe1825b8aa3106be77cc3928b8f7f94727bd51bd506bf1"
+    },
+    {
+      "path": "docs/KNOWLEDGE_RULES.md",
+      "bytes": 13941,
+      "sha256": "fd82da838147fe904a5b859f6da70118e2618d02dda4d14ce7d79dddf9577e90"
+    },
+    {
+      "path": "docs/PACKAGE_CHECK_RESULT.txt",
+      "bytes": 518,
+      "sha256": "f3b6f8849b976877a9bd798342aa98d2a9e87c42d450c794f450e699edd4629d"
+    },
+    {
+      "path": "docs/PACKAGE_REVIEW.md",
+      "bytes": 3741,
+      "sha256": "e0ee2939b9f8d6c7cf64ff3dfa345feef64c678b3e45f1fd2b0b099c261af048"
+    },
+    {
+      "path": "docs/PRIVACY_AND_SECURITY.md",
+      "bytes": 8075,
+      "sha256": "b3acd56f0e87ff42ef89d3582b030331c9116d0c267709187ee7547cb31fec94"
+    },
+    {
+      "path": "docs/RESEARCH_AND_REUSE.md",
+      "bytes": 8842,
+      "sha256": "2913b10f35792816e243c864cc7ab5f5ff282ee8008a7bd82165a569abcbadff"
+    },
+    {
+      "path": "docs/SOURCES.md",
+      "bytes": 4800,
+      "sha256": "2a5089359d724fb33b330a437959fff1d7400c6da8cbd2ca282783ab46e63a5c"
+    },
+    {
+      "path": "docs/TRACEABILITY.md",
+      "bytes": 1255,
+      "sha256": "70db160730a8db7fc10613b68a03c46611859cc95306c32ee8443ffdc2ff8222"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-26-memory-atlas-p0-p1.md",
+      "bytes": 16983,
+      "sha256": "72b2e791de84fa3060c107234ce96914769953c57198c76f7fea7c64f3b52b84"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-26-memory-atlas-p2-p3.md",
+      "bytes": 15896,
+      "sha256": "9c41f7dccaa1db065aec765768320d47535ffe32216352da463d6727c00e6ca2"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-26-memory-atlas-design.md",
+      "bytes": 548,
+      "sha256": "772dccee3fe93fa61cce7464f8dd1906103c43f0e47601ec6d27aa7caa7d3cf1"
+    },
+    {
+      "path": "examples/MEMORY.md",
+      "bytes": 822,
+      "sha256": "42956851b4d224978003b32042d2a9360f092c32d7ba94567fe793551fe9aa6c"
+    },
+    {
+      "path": "examples/canonical-vectors.json",
+      "bytes": 1132,
+      "sha256": "c601875edef581d166abce3e404aa90786dec3c296e1fbe2f6fade011fc03dc4"
+    },
+    {
+      "path": "examples/demo.atlas.json",
+      "bytes": 31958,
+      "sha256": "11f9f5b4eea613cfc881c1fbfe76e5be696b5c149ed8aec739d2e276df756003"
+    },
+    {
+      "path": "examples/expected-projections.json",
+      "bytes": 1295,
+      "sha256": "64c1b859ef9a23aecd3e5359de95fbc0d1a3085255669e5d7ce4fa2715a329fc"
+    },
+    {
+      "path": "examples/export-manifest.json",
+      "bytes": 552,
+      "sha256": "9b70e65eca4c80fd63129a90f899aa6a66ff69177da19cb476e66a2fe7e8b8c5"
+    },
+    {
+      "path": "examples/memory-export.json",
+      "bytes": 2752,
+      "sha256": "683d8d7586e737e1cbe41e5a56da09ff6c9c624dc5747c16241f0171611c9987"
+    },
+    {
+      "path": "fixtures/chatgpt/01-linear.json",
+      "bytes": 1145,
+      "sha256": "fb93cd2cb0dc66f917d5b2e48a5fc54a9579d8f6f0d0a007243c81c794d14d15"
+    },
+    {
+      "path": "fixtures/chatgpt/02-branches.json",
+      "bytes": 1511,
+      "sha256": "e4e27c707a46b9c0beb13c58163e806c8105fdce0dfdff8f2925be81432c0041"
+    },
+    {
+      "path": "fixtures/chatgpt/03-missing-time.json",
+      "bytes": 1106,
+      "sha256": "8d4b6cd5b47a00e428b57d807d328073d4014fe85e84629e6e8a5a1084369cd0"
+    },
+    {
+      "path": "fixtures/chatgpt/04-multimodal.json",
+      "bytes": 1413,
+      "sha256": "de9d1e1714a0f6d31b249871c0de70e6da17b98b2c6f663020a8552cb57bf931"
+    },
+    {
+      "path": "fixtures/chatgpt/05-cycle.json",
+      "bytes": 986,
+      "sha256": "a17fb22b14611e14f3bbd2d879b049ca9238bdde57bbc3f1e5ef7584740e9f9c"
+    },
+    {
+      "path": "fixtures/chatgpt/06-revision.json",
+      "bytes": 1158,
+      "sha256": "1404f3682b1f7f0b1043218a651d835fb266757956a9580e948aada165eb5aed"
+    },
+    {
+      "path": "fixtures/chatgpt/07-hostile.json",
+      "bytes": 1257,
+      "sha256": "99af8c17a3b1cc6975484f97f0cd707d5f3a9ee27c3999a93863891d1898607b"
+    },
+    {
+      "path": "fixtures/chatgpt/08-split-a.json",
+      "bytes": 1145,
+      "sha256": "fb93cd2cb0dc66f917d5b2e48a5fc54a9579d8f6f0d0a007243c81c794d14d15"
+    },
+    {
+      "path": "fixtures/chatgpt/09-split-b.json",
+      "bytes": 2273,
+      "sha256": "c06178d288faff4c729faed588aa499a5eaa27deae6fc049eefcceec252af950"
+    },
+    {
+      "path": "fixtures/claude/01-content.json",
+      "bytes": 745,
+      "sha256": "674005c18bc2212516049195166961b40100335de6f660cf6a5536b153579672"
+    },
+    {
+      "path": "fixtures/claude/02-unknown.json",
+      "bytes": 128,
+      "sha256": "a8b145ca5e7ba127bd90814978aa69d8168652d6f545de0a5404257f846eb9ab"
+    },
+    {
+      "path": "fixtures/duplicate-key.txt",
+      "bytes": 33,
+      "sha256": "d0864623f5feca532453208c6ac9c2c171a9ba22c84bcd9dab040f5a545cd848"
+    },
+    {
+      "path": "fixtures/expected/import-cases.json",
+      "bytes": 3451,
+      "sha256": "06a7c605d1f90b12136328898ff43c436475359e6a07c2b842a28ccef9061ea6"
+    },
+    {
+      "path": "schemas/atlas.schema.json",
+      "bytes": 24151,
+      "sha256": "8e8a31215bd364587e241fb7358ddc49268db9d1f6ab2878dc03682c99514b7a"
+    },
+    {
+      "path": "schemas/memory-export.schema.json",
+      "bytes": 6784,
+      "sha256": "f0f5a941eab1e8ec781bbd97f8f9972d371d6eb9a2b8ace56c24b9a1e84dff14"
+    },
+    {
+      "path": "templates/AGENTS.md.example",
+      "bytes": 1169,
+      "sha256": "1733c229a7be91233c187dab1abdb7bfce0247ca4643cb930a20f062216d8338"
+    },
+    {
+      "path": "templates/cursor-rules/memory-atlas.mdc",
+      "bytes": 837,
+      "sha256": "41d77f6fb8a9e15b0fe7caec77cb6c4f1aab854cc1a1056f2cc898499165f40d"
+    },
+    {
+      "path": "templates/gitignore.append.txt",
+      "bytes": 370,
+      "sha256": "0d33654bfaaf98b4d8dad9d78a3e8071906434d40e382bc3d45fe78a1978d7e1"
+    }
+  ]
+}

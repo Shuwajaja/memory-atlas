@@ -1,0 +1,11 @@
+{
+  "status": "synthetic-example-not-an-active-approval",
+  "payload_sha256": "0c0613b09ca2f94075250c38c5e775cc0a46a879487091a55fd75bd7766c750a",
+  "json_sha256": "683d8d7586e737e1cbe41e5a56da09ff6c9c624dc5747c16241f0171611c9987",
+  "markdown_sha256": "42956851b4d224978003b32042d2a9360f092c32d7ba94567fe793551fe9aa6c",
+  "memory_set_id": "set_orion_ready",
+  "policy_version": "1.0",
+  "created_at": "2026-10-26T16:15:00Z",
+  "expires_at": "2026-10-27T16:15:00Z",
+  "state_sha256": "02623c12f5153ceb0a40dc7ec0b28238619543cece895a239762e85380621036"
+}

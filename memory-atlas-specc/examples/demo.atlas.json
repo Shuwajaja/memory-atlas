@@ -1,0 +1,847 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "snap_demo",
+  "created_at": "2026-10-26T16:15:00Z",
+  "workspace": {
+    "id": "ws_demo",
+    "title": "Demo · synthetisch — Memory Atlas",
+    "timezone": "Europe/Berlin",
+    "created_at": "2026-10-26T16:00:00Z",
+    "topic_policy": "ai_projects_only",
+    "policy_version": "1.0"
+  },
+  "source_files": [
+    {
+      "id": "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d",
+      "namespace": "synthetic-account",
+      "provider": "chatgpt",
+      "original_name": "synthetic-orion.json",
+      "byte_sha256": "0cb619c4303f3e7c94f3be0315f36ac979dd53446ea533c2974e8f567af96758",
+      "imported_at": "2026-10-26T16:00:00Z",
+      "adapter_profile": "chatgpt-mapping-v1",
+      "raw_text": "[\n  {\n    \"id\": \"orion-demo\",\n    \"title\": \"Demo · synthetisch — Orion\",\n    \"create_time\": 1777629600.0,\n    \"current_node\": \"m6\",\n    \"mapping\": {\n      \"root\": {\n        \"id\": \"root\",\n        \"parent\": null,\n        \"children\": [\n          \"m1\"\n        ],\n        \"message\": null\n      },\n      \"m1\": {\n        \"id\": \"m1\",\n        \"parent\": \"root\",\n        \"children\": [\n          \"m2\"\n        ],\n        \"message\": {\n          \"id\": \"m1\",\n          \"author\": {\n            \"role\": \"user\"\n          },\n          \"create_time\": 1777629600.0,\n          \"content\": {\n            \"content_type\": \"text\",\n            \"parts\": [\n              \"Für Projekt Orion nutzen wir Alpha als Supervisor.\"\n            ]\n          }\n        }\n      },\n      \"m2\": {\n        \"id\": \"m2\",\n        \"parent\": \"m1\",\n        \"children\": [\n          \"m3\"\n        ],\n        \"message\": {\n          \"id\": \"m2\",\n          \"author\": {\n            \"role\": \"user\"\n          },\n          \"create_time\": 1792749600.0,\n          \"content\": {\n            \"content_type\": \"text\",\n            \"parts\": [\n              \"Ab dem 23.10.2026 nutzen wir Beta als Supervisor statt Alpha.\"\n            ]\n          }\n        }\n      },\n      \"m3\": {\n        \"id\": \"m3\",\n        \"parent\": \"m2\",\n        \"children\": [\n          \"m4\"\n        ],\n        \"message\": {\n          \"id\": \"m3\",\n          \"author\": {\n            \"role\": \"assistant\"\n          },\n          \"create_time\": 1792836000.0,\n          \"content\": {\n            \"content_type\": \"text\",\n            \"parts\": [\n              \"Alle Tests sind bestanden.\"\n            ]\n          }\n        }\n      },\n      \"m4\": {\n        \"id\": \"m4\",\n        \"parent\": \"m3\",\n        \"children\": [\n          \"m5\"\n        ],\n        \"message\": {\n          \"id\": \"m4\",\n          \"author\": {\n            \"role\": \"user\"\n          },\n          \"create_time\": 1792922400.0,\n          \"content\": {\n            \"content_type\": \"text\",\n            \"parts\": [\n              \"Die Oberfläche für Projekt Orion soll Deutsch verwenden.\"\n            ]\n          }\n        }\n      },\n      \"m5\": {\n        \"id\": \"m5\",\n        \"parent\": \"m4\",\n        \"children\": [\n          \"m6\"\n        ],\n        \"message\": {\n          \"id\": \"m5\",\n          \"author\": {\n            \"role\": \"assistant\"\n          },\n          \"create_time\": 1792922460.0,\n          \"content\": {\n            \"content_type\": \"text\",\n            \"parts\": [\n              \"Gamma wäre eine weitere Option.\"\n            ]\n          }\n        }\n      },\n      \"m6\": {\n        \"id\": \"m6\",\n        \"parent\": \"m5\",\n        \"children\": [],\n        \"message\": {\n          \"id\": \"m6\",\n          \"author\": {\n            \"role\": \"user\"\n          },\n          \"create_time\": 1792922520.0,\n          \"content\": {\n            \"content_type\": \"text\",\n            \"parts\": [\n              \"Demo-Schlüssel: SAMPLE-NOT-A-REAL-SECRET.\"\n            ]\n          }\n        }\n      }\n    }\n  }\n]\n"
+    }
+  ],
+  "import_batches": [
+    {
+      "id": "imp_demo",
+      "source_file_ids": [
+        "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d"
+      ],
+      "completed_at": "2026-10-26T16:00:00Z",
+      "adapter_version": "fixture-contract-1",
+      "diagnostics": []
+    }
+  ],
+  "conversations": [
+    {
+      "id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "source_namespace": "synthetic-account",
+      "provider": "chatgpt",
+      "external_id": "orion-demo",
+      "title": "Demo · synthetisch — Orion",
+      "created_at": "2026-05-01T10:00:00Z"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node_0d7f76830fdf761cd48220da157d1e56757211d3f7b137ba0dbdd401aaa2d922",
+      "import_batch_id": "imp_demo",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_node_id": "root",
+      "parent_node_id": null,
+      "child_node_ids": [
+        "node_dd1233e4841d75edd460100a9e930c0c08e31bce464d5f3290675213ebc4d30f"
+      ],
+      "message_revision_id": null,
+      "branch_membership": "selected"
+    },
+    {
+      "id": "node_dd1233e4841d75edd460100a9e930c0c08e31bce464d5f3290675213ebc4d30f",
+      "import_batch_id": "imp_demo",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_node_id": "m1",
+      "parent_node_id": "node_0d7f76830fdf761cd48220da157d1e56757211d3f7b137ba0dbdd401aaa2d922",
+      "child_node_ids": [
+        "node_9bbb4fdf44652cc40517b80ba739087ca7bd476599aee83490d6e8f156b35989"
+      ],
+      "message_revision_id": "rev_b0603c6debeb28e039734bbd38c80d79017cb6e1a66a351bbea91581c7d02cd6",
+      "branch_membership": "selected"
+    },
+    {
+      "id": "node_9bbb4fdf44652cc40517b80ba739087ca7bd476599aee83490d6e8f156b35989",
+      "import_batch_id": "imp_demo",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_node_id": "m2",
+      "parent_node_id": "node_dd1233e4841d75edd460100a9e930c0c08e31bce464d5f3290675213ebc4d30f",
+      "child_node_ids": [
+        "node_3c3652ce66a01b41b14895fa711bf20b08f76614177d8a226ea6d3504151fad0"
+      ],
+      "message_revision_id": "rev_280b2722542ef979aa53546953537f28a722ce37650b7d8ff7e4eacb107df841",
+      "branch_membership": "selected"
+    },
+    {
+      "id": "node_3c3652ce66a01b41b14895fa711bf20b08f76614177d8a226ea6d3504151fad0",
+      "import_batch_id": "imp_demo",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_node_id": "m3",
+      "parent_node_id": "node_9bbb4fdf44652cc40517b80ba739087ca7bd476599aee83490d6e8f156b35989",
+      "child_node_ids": [
+        "node_3dc5e5701e0415bc63a020ae7d963d6bed080cb6b642dd1439acc30b717358a3"
+      ],
+      "message_revision_id": "rev_e227f2c93ad2f643a75d7bfd406ea7ad11b7aa6476bad5cffe7556293a212a8e",
+      "branch_membership": "selected"
+    },
+    {
+      "id": "node_3dc5e5701e0415bc63a020ae7d963d6bed080cb6b642dd1439acc30b717358a3",
+      "import_batch_id": "imp_demo",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_node_id": "m4",
+      "parent_node_id": "node_3c3652ce66a01b41b14895fa711bf20b08f76614177d8a226ea6d3504151fad0",
+      "child_node_ids": [
+        "node_6a2789c77a504269e7a138108195650e9e1a8781dc0c03ddc63cb3370d37d08c"
+      ],
+      "message_revision_id": "rev_20f2eb09382c66dc3bba78704e0017d1ae7ae3191985ae007446fd43c4fb7987",
+      "branch_membership": "selected"
+    },
+    {
+      "id": "node_6a2789c77a504269e7a138108195650e9e1a8781dc0c03ddc63cb3370d37d08c",
+      "import_batch_id": "imp_demo",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_node_id": "m5",
+      "parent_node_id": "node_3dc5e5701e0415bc63a020ae7d963d6bed080cb6b642dd1439acc30b717358a3",
+      "child_node_ids": [
+        "node_542c4b884a72c99810e3d6176f8da77a94ebb4b692873b49f95209ec547f09d9"
+      ],
+      "message_revision_id": "rev_4a07f1242250b8fe88b8c2747c2bb4481f1e56d29b991b5f9609e9fb920423c6",
+      "branch_membership": "selected"
+    },
+    {
+      "id": "node_542c4b884a72c99810e3d6176f8da77a94ebb4b692873b49f95209ec547f09d9",
+      "import_batch_id": "imp_demo",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_node_id": "m6",
+      "parent_node_id": "node_6a2789c77a504269e7a138108195650e9e1a8781dc0c03ddc63cb3370d37d08c",
+      "child_node_ids": [],
+      "message_revision_id": "rev_52c0ad133fdabec47f352f4032123a12c8702edab3ed89b523c6724074bc4bc1",
+      "branch_membership": "selected"
+    }
+  ],
+  "messages": [
+    {
+      "revision_id": "rev_b0603c6debeb28e039734bbd38c80d79017cb6e1a66a351bbea91581c7d02cd6",
+      "logical_id": "msg_cbd4bc8ae25d3f455fff3bcc376695825956132422a13c96ab269c9ff16841b5",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_id": "m1",
+      "role": "user",
+      "sent_at": "2026-05-01T10:00:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Für Projekt Orion nutzen wir Alpha als Supervisor.",
+          "label": null
+        }
+      ],
+      "occurrences": [
+        {
+          "source_file_id": "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d",
+          "import_batch_id": "imp_demo",
+          "json_pointer": "/0/mapping/m1/message",
+          "node_id": "node_dd1233e4841d75edd460100a9e930c0c08e31bce464d5f3290675213ebc4d30f"
+        }
+      ]
+    },
+    {
+      "revision_id": "rev_280b2722542ef979aa53546953537f28a722ce37650b7d8ff7e4eacb107df841",
+      "logical_id": "msg_319ddc049b924aacd859995a4a0619635b2fa7e88f5befffb85965f25195be20",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_id": "m2",
+      "role": "user",
+      "sent_at": "2026-10-23T10:00:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Ab dem 23.10.2026 nutzen wir Beta als Supervisor statt Alpha.",
+          "label": null
+        }
+      ],
+      "occurrences": [
+        {
+          "source_file_id": "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d",
+          "import_batch_id": "imp_demo",
+          "json_pointer": "/0/mapping/m2/message",
+          "node_id": "node_9bbb4fdf44652cc40517b80ba739087ca7bd476599aee83490d6e8f156b35989"
+        }
+      ]
+    },
+    {
+      "revision_id": "rev_e227f2c93ad2f643a75d7bfd406ea7ad11b7aa6476bad5cffe7556293a212a8e",
+      "logical_id": "msg_1da1f4efe2fcf1283af21a82a6097296c53bca6d7cd670af38c4a5a6f52a9707",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_id": "m3",
+      "role": "assistant",
+      "sent_at": "2026-10-24T10:00:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Alle Tests sind bestanden.",
+          "label": null
+        }
+      ],
+      "occurrences": [
+        {
+          "source_file_id": "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d",
+          "import_batch_id": "imp_demo",
+          "json_pointer": "/0/mapping/m3/message",
+          "node_id": "node_3c3652ce66a01b41b14895fa711bf20b08f76614177d8a226ea6d3504151fad0"
+        }
+      ]
+    },
+    {
+      "revision_id": "rev_20f2eb09382c66dc3bba78704e0017d1ae7ae3191985ae007446fd43c4fb7987",
+      "logical_id": "msg_64f98be2aaf1db833461333b2a1497522cca1c12fde23845fc2816476d5caf07",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_id": "m4",
+      "role": "user",
+      "sent_at": "2026-10-25T10:00:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Die Oberfläche für Projekt Orion soll Deutsch verwenden.",
+          "label": null
+        }
+      ],
+      "occurrences": [
+        {
+          "source_file_id": "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d",
+          "import_batch_id": "imp_demo",
+          "json_pointer": "/0/mapping/m4/message",
+          "node_id": "node_3dc5e5701e0415bc63a020ae7d963d6bed080cb6b642dd1439acc30b717358a3"
+        }
+      ]
+    },
+    {
+      "revision_id": "rev_4a07f1242250b8fe88b8c2747c2bb4481f1e56d29b991b5f9609e9fb920423c6",
+      "logical_id": "msg_af0325f836aa5d9d1d5326c792d464221cc04f93cb9b437e2750a721a761def8",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_id": "m5",
+      "role": "assistant",
+      "sent_at": "2026-10-25T10:01:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Gamma wäre eine weitere Option.",
+          "label": null
+        }
+      ],
+      "occurrences": [
+        {
+          "source_file_id": "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d",
+          "import_batch_id": "imp_demo",
+          "json_pointer": "/0/mapping/m5/message",
+          "node_id": "node_6a2789c77a504269e7a138108195650e9e1a8781dc0c03ddc63cb3370d37d08c"
+        }
+      ]
+    },
+    {
+      "revision_id": "rev_52c0ad133fdabec47f352f4032123a12c8702edab3ed89b523c6724074bc4bc1",
+      "logical_id": "msg_f9b23f43b4ac148e568a402446472ed2fa608f262c8ed615a67c9b718ab6b5f7",
+      "conversation_id": "conv_7ee9650ebc585e6a2d2234ccb7b61d4247a8bd89c11f4f3d2e3da517abc89785",
+      "external_id": "m6",
+      "role": "user",
+      "sent_at": "2026-10-25T10:02:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Demo-Schlüssel: SAMPLE-NOT-A-REAL-SECRET.",
+          "label": null
+        }
+      ],
+      "occurrences": [
+        {
+          "source_file_id": "src_c60a7ef06051db6445fdc9c298888079493f8408ecf8c4fe2eff56c6dec9bb4d",
+          "import_batch_id": "imp_demo",
+          "json_pointer": "/0/mapping/m6/message",
+          "node_id": "node_542c4b884a72c99810e3d6176f8da77a94ebb4b692873b49f95209ec547f09d9"
+        }
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "clm_alpha",
+      "text": "Für Projekt Orion nutzen wir Alpha als Supervisor.",
+      "kind": "decision",
+      "source_kind": "user_decision",
+      "extraction_method": "manual",
+      "modality": "asserted",
+      "scope": {
+        "workspace_id": "ws_demo",
+        "project_id": "project_orion",
+        "environment": "local"
+      },
+      "subject_id": "orion",
+      "predicate": "architecture.supervisor",
+      "value": "Alpha",
+      "cardinality": "single",
+      "category": "architecture",
+      "evidence_ids": [
+        "ev_1"
+      ],
+      "asserted_at": "2026-05-01T10:00:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "validity_kind": "interval",
+      "valid_from": "2026-05-01T10:00:00Z",
+      "valid_to": null,
+      "validity_basis": "message_time_confirmed"
+    },
+    {
+      "id": "clm_beta",
+      "text": "Ab dem 23.10.2026 nutzen wir Beta als Supervisor statt Alpha.",
+      "kind": "decision",
+      "source_kind": "user_decision",
+      "extraction_method": "manual",
+      "modality": "asserted",
+      "scope": {
+        "workspace_id": "ws_demo",
+        "project_id": "project_orion",
+        "environment": "local"
+      },
+      "subject_id": "orion",
+      "predicate": "architecture.supervisor",
+      "value": "Beta",
+      "cardinality": "single",
+      "category": "architecture",
+      "evidence_ids": [
+        "ev_2"
+      ],
+      "asserted_at": "2026-10-23T10:00:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "validity_kind": "interval",
+      "valid_from": "2026-10-23T10:00:00Z",
+      "valid_to": null,
+      "validity_basis": "message_time_confirmed"
+    },
+    {
+      "id": "clm_tests",
+      "text": "Alle Tests sind bestanden.",
+      "kind": "project_status",
+      "source_kind": "assistant_execution_claim",
+      "extraction_method": "manual",
+      "modality": "asserted",
+      "scope": {
+        "workspace_id": "ws_demo",
+        "project_id": "project_orion",
+        "environment": "local"
+      },
+      "subject_id": "orion",
+      "predicate": "execution.tests",
+      "value": "passed",
+      "cardinality": "single",
+      "category": "projects",
+      "evidence_ids": [
+        "ev_3"
+      ],
+      "asserted_at": "2026-10-24T10:00:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "validity_kind": "interval",
+      "valid_from": "2026-10-24T10:00:00Z",
+      "valid_to": null,
+      "validity_basis": "message_time_confirmed"
+    },
+    {
+      "id": "clm_language",
+      "text": "Die Oberfläche für Projekt Orion soll Deutsch verwenden.",
+      "kind": "preference",
+      "source_kind": "user_decision",
+      "extraction_method": "manual",
+      "modality": "asserted",
+      "scope": {
+        "workspace_id": "ws_demo",
+        "project_id": "project_orion",
+        "environment": "local"
+      },
+      "subject_id": "orion",
+      "predicate": "ui.language",
+      "value": "de",
+      "cardinality": "single",
+      "category": "preferences",
+      "evidence_ids": [
+        "ev_4"
+      ],
+      "asserted_at": "2026-10-25T10:00:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "validity_kind": "timeless",
+      "valid_from": null,
+      "valid_to": null,
+      "validity_basis": "reviewer_assigned"
+    },
+    {
+      "id": "clm_gamma",
+      "text": "Gamma wäre eine weitere Option.",
+      "kind": "research_finding",
+      "source_kind": "assistant_recommendation",
+      "extraction_method": "manual",
+      "modality": "proposed",
+      "scope": {
+        "workspace_id": "ws_demo",
+        "project_id": "project_orion",
+        "environment": "local"
+      },
+      "subject_id": "orion",
+      "predicate": "architecture.alternative",
+      "value": "Gamma",
+      "cardinality": "single",
+      "category": "research",
+      "evidence_ids": [
+        "ev_5"
+      ],
+      "asserted_at": "2026-10-25T10:01:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "validity_kind": "interval",
+      "valid_from": "2026-10-25T10:01:00Z",
+      "valid_to": null,
+      "validity_basis": "message_time_confirmed"
+    },
+    {
+      "id": "clm_private",
+      "text": "Demo-Schlüssel: SAMPLE-NOT-A-REAL-SECRET.",
+      "kind": "fact",
+      "source_kind": "user_report",
+      "extraction_method": "manual",
+      "modality": "asserted",
+      "scope": {
+        "workspace_id": "ws_demo",
+        "project_id": "project_orion",
+        "environment": "local"
+      },
+      "subject_id": "orion",
+      "predicate": "demo.secret",
+      "value": "SAMPLE-NOT-A-REAL-SECRET",
+      "cardinality": "single",
+      "category": "excluded_private",
+      "evidence_ids": [
+        "ev_6"
+      ],
+      "asserted_at": "2026-10-25T10:02:00Z",
+      "recorded_at": "2026-10-26T16:00:00Z",
+      "validity_kind": "interval",
+      "valid_from": "2026-10-25T10:02:00Z",
+      "valid_to": null,
+      "validity_basis": "message_time_confirmed"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_1",
+      "message_revision_id": "rev_b0603c6debeb28e039734bbd38c80d79017cb6e1a66a351bbea91581c7d02cd6",
+      "node_id": "node_dd1233e4841d75edd460100a9e930c0c08e31bce464d5f3290675213ebc4d30f",
+      "part_index": 0,
+      "start_cp": 0,
+      "end_cp": 50,
+      "quote": "Für Projekt Orion nutzen wir Alpha als Supervisor.",
+      "quote_sha256": "fd21547966990d0e5f8497a01c5cec902a49f9dc0ca50f4cf16d0d9ffbdcc415",
+      "relation": "supports",
+      "lineage_root_id": "ev_1"
+    },
+    {
+      "id": "ev_2",
+      "message_revision_id": "rev_280b2722542ef979aa53546953537f28a722ce37650b7d8ff7e4eacb107df841",
+      "node_id": "node_9bbb4fdf44652cc40517b80ba739087ca7bd476599aee83490d6e8f156b35989",
+      "part_index": 0,
+      "start_cp": 0,
+      "end_cp": 61,
+      "quote": "Ab dem 23.10.2026 nutzen wir Beta als Supervisor statt Alpha.",
+      "quote_sha256": "d5193f49b82cd6e46af7f2066a845963283cc1e2c6ce8ba22665fa38af98537e",
+      "relation": "supports",
+      "lineage_root_id": "ev_2"
+    },
+    {
+      "id": "ev_3",
+      "message_revision_id": "rev_e227f2c93ad2f643a75d7bfd406ea7ad11b7aa6476bad5cffe7556293a212a8e",
+      "node_id": "node_3c3652ce66a01b41b14895fa711bf20b08f76614177d8a226ea6d3504151fad0",
+      "part_index": 0,
+      "start_cp": 0,
+      "end_cp": 26,
+      "quote": "Alle Tests sind bestanden.",
+      "quote_sha256": "e8a9257ce5cf2bc3ce1232e6394e083bc258220c7c2d2fb3b032aa3f95b3b10b",
+      "relation": "supports",
+      "lineage_root_id": "ev_3"
+    },
+    {
+      "id": "ev_4",
+      "message_revision_id": "rev_20f2eb09382c66dc3bba78704e0017d1ae7ae3191985ae007446fd43c4fb7987",
+      "node_id": "node_3dc5e5701e0415bc63a020ae7d963d6bed080cb6b642dd1439acc30b717358a3",
+      "part_index": 0,
+      "start_cp": 0,
+      "end_cp": 56,
+      "quote": "Die Oberfläche für Projekt Orion soll Deutsch verwenden.",
+      "quote_sha256": "c04628f27961c95a4a19e4017c60683d435090775d59485761c080fc31870195",
+      "relation": "supports",
+      "lineage_root_id": "ev_4"
+    },
+    {
+      "id": "ev_5",
+      "message_revision_id": "rev_4a07f1242250b8fe88b8c2747c2bb4481f1e56d29b991b5f9609e9fb920423c6",
+      "node_id": "node_6a2789c77a504269e7a138108195650e9e1a8781dc0c03ddc63cb3370d37d08c",
+      "part_index": 0,
+      "start_cp": 0,
+      "end_cp": 31,
+      "quote": "Gamma wäre eine weitere Option.",
+      "quote_sha256": "185f13d34f0d2d0e433c8b76cf182165fa382da95bd5d07e6f1347c8c9dbd048",
+      "relation": "supports",
+      "lineage_root_id": "ev_5"
+    },
+    {
+      "id": "ev_6",
+      "message_revision_id": "rev_52c0ad133fdabec47f352f4032123a12c8702edab3ed89b523c6724074bc4bc1",
+      "node_id": "node_542c4b884a72c99810e3d6176f8da77a94ebb4b692873b49f95209ec547f09d9",
+      "part_index": 0,
+      "start_cp": 0,
+      "end_cp": 41,
+      "quote": "Demo-Schlüssel: SAMPLE-NOT-A-REAL-SECRET.",
+      "quote_sha256": "e5db920203c4a89dd16df9549af1c066031fc347ed3b658132f04352899d8f68",
+      "relation": "supports",
+      "lineage_root_id": "ev_6"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_beta_alpha",
+      "type": "supersedes",
+      "from_claim_id": "clm_beta",
+      "to_claim_id": "clm_alpha",
+      "effective_at": "2026-10-23T10:00:00Z",
+      "recorded_at": "2026-10-26T16:08:00Z",
+      "reason": "Ausdrückliche synthetische Entscheidung Beta statt Alpha."
+    }
+  ],
+  "reviews": [
+    {
+      "id": "review_1",
+      "seq": 1,
+      "target_type": "claim",
+      "target_id": "clm_alpha",
+      "action": "confirm_source",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:02:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [
+        "ev_1"
+      ],
+      "context_checked": true,
+      "branch_checked": true,
+      "sensitivity": null,
+      "review_due_at": null
+    },
+    {
+      "id": "review_2",
+      "seq": 2,
+      "target_type": "claim",
+      "target_id": "clm_alpha",
+      "action": "classify_privacy",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:02:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": "shareable",
+      "review_due_at": null
+    },
+    {
+      "id": "review_3",
+      "seq": 3,
+      "target_type": "claim",
+      "target_id": "clm_alpha",
+      "action": "accept",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:02:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": null,
+      "review_due_at": "2027-04-24T16:00:00Z"
+    },
+    {
+      "id": "review_4",
+      "seq": 4,
+      "target_type": "claim",
+      "target_id": "clm_beta",
+      "action": "confirm_source",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:03:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [
+        "ev_2"
+      ],
+      "context_checked": true,
+      "branch_checked": true,
+      "sensitivity": null,
+      "review_due_at": null
+    },
+    {
+      "id": "review_5",
+      "seq": 5,
+      "target_type": "claim",
+      "target_id": "clm_beta",
+      "action": "classify_privacy",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:03:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": "shareable",
+      "review_due_at": null
+    },
+    {
+      "id": "review_6",
+      "seq": 6,
+      "target_type": "claim",
+      "target_id": "clm_beta",
+      "action": "accept",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:03:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": null,
+      "review_due_at": "2027-04-24T16:00:00Z"
+    },
+    {
+      "id": "review_7",
+      "seq": 7,
+      "target_type": "claim",
+      "target_id": "clm_tests",
+      "action": "confirm_source",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:04:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [
+        "ev_3"
+      ],
+      "context_checked": true,
+      "branch_checked": true,
+      "sensitivity": null,
+      "review_due_at": null
+    },
+    {
+      "id": "review_8",
+      "seq": 8,
+      "target_type": "claim",
+      "target_id": "clm_tests",
+      "action": "classify_privacy",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:04:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": "shareable",
+      "review_due_at": null
+    },
+    {
+      "id": "review_9",
+      "seq": 9,
+      "target_type": "claim",
+      "target_id": "clm_tests",
+      "action": "accept",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:04:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": null,
+      "review_due_at": "2026-11-02T16:00:00Z"
+    },
+    {
+      "id": "review_10",
+      "seq": 10,
+      "target_type": "claim",
+      "target_id": "clm_language",
+      "action": "confirm_source",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:05:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [
+        "ev_4"
+      ],
+      "context_checked": true,
+      "branch_checked": true,
+      "sensitivity": null,
+      "review_due_at": null
+    },
+    {
+      "id": "review_11",
+      "seq": 11,
+      "target_type": "claim",
+      "target_id": "clm_language",
+      "action": "classify_privacy",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:05:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": "shareable",
+      "review_due_at": null
+    },
+    {
+      "id": "review_12",
+      "seq": 12,
+      "target_type": "claim",
+      "target_id": "clm_language",
+      "action": "accept",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:05:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": null,
+      "review_due_at": "2027-04-24T16:00:00Z"
+    },
+    {
+      "id": "review_13",
+      "seq": 13,
+      "target_type": "claim",
+      "target_id": "clm_gamma",
+      "action": "confirm_source",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:06:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [
+        "ev_5"
+      ],
+      "context_checked": true,
+      "branch_checked": true,
+      "sensitivity": null,
+      "review_due_at": null
+    },
+    {
+      "id": "review_14",
+      "seq": 14,
+      "target_type": "claim",
+      "target_id": "clm_gamma",
+      "action": "classify_privacy",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:06:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": "shareable",
+      "review_due_at": null
+    },
+    {
+      "id": "review_15",
+      "seq": 15,
+      "target_type": "claim",
+      "target_id": "clm_gamma",
+      "action": "accept",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:06:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": null,
+      "review_due_at": "2026-11-02T16:00:00Z"
+    },
+    {
+      "id": "review_16",
+      "seq": 16,
+      "target_type": "claim",
+      "target_id": "clm_private",
+      "action": "confirm_source",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:07:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [
+        "ev_6"
+      ],
+      "context_checked": true,
+      "branch_checked": true,
+      "sensitivity": null,
+      "review_due_at": null
+    },
+    {
+      "id": "review_17",
+      "seq": 17,
+      "target_type": "claim",
+      "target_id": "clm_private",
+      "action": "classify_privacy",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:07:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": "secret",
+      "review_due_at": null
+    },
+    {
+      "id": "review_18",
+      "seq": 18,
+      "target_type": "claim",
+      "target_id": "clm_private",
+      "action": "accept",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:07:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": null,
+      "review_due_at": "2026-11-02T16:00:00Z"
+    },
+    {
+      "id": "review_19",
+      "seq": 19,
+      "target_type": "relation",
+      "target_id": "rel_beta_alpha",
+      "action": "confirm_relation",
+      "actor_id": "human_demo",
+      "recorded_at": "2026-10-26T16:09:00Z",
+      "reason": "Synthetische Reviewentscheidung für den Testfall.",
+      "evidence_ids": [],
+      "context_checked": null,
+      "branch_checked": null,
+      "sensitivity": null,
+      "review_due_at": null
+    }
+  ],
+  "memory_sets": [
+    {
+      "id": "set_orion_ready",
+      "name": "Orion — freigegebener Beispielkontext",
+      "scope": {
+        "workspace_id": "ws_demo",
+        "project_id": "project_orion",
+        "environment": "local",
+        "consumer_id": "demo-cursor",
+        "purpose": "Projektkontext"
+      },
+      "selected_claim_ids": [
+        "clm_beta",
+        "clm_language"
+      ],
+      "include_research_notes": false,
+      "max_claims": 50,
+      "max_text_bytes": 16000,
+      "policy_version": "1.0",
+      "created_at": "2026-10-26T16:10:00Z"
+    }
+  ],
+  "export_history": []
+}

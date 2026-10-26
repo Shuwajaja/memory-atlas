@@ -1,0 +1,110 @@
+[
+  {
+    "id": "linear-001",
+    "title": "Synthetisches Testgespräch",
+    "create_time": 1777629600.0,
+    "current_node": "m2",
+    "mapping": {
+      "root": {
+        "id": "root",
+        "parent": null,
+        "children": [
+          "m1"
+        ],
+        "message": null
+      },
+      "m1": {
+        "id": "m1",
+        "parent": "root",
+        "children": [
+          "m2"
+        ],
+        "message": {
+          "id": "m1",
+          "author": {
+            "role": "user"
+          },
+          "create_time": 1777629600.0,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Für Projekt Orion nutzen wir Alpha."
+            ]
+          }
+        }
+      },
+      "m2": {
+        "id": "m2",
+        "parent": "m1",
+        "children": [],
+        "message": {
+          "id": "m2",
+          "author": {
+            "role": "assistant"
+          },
+          "create_time": 1777629601.0,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Die Entscheidung wurde besprochen."
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "split-002",
+    "title": "Synthetisches Testgespräch",
+    "create_time": 1788220800.0,
+    "current_node": "m2",
+    "mapping": {
+      "root": {
+        "id": "root",
+        "parent": null,
+        "children": [
+          "m1"
+        ],
+        "message": null
+      },
+      "m1": {
+        "id": "m1",
+        "parent": "root",
+        "children": [
+          "m2"
+        ],
+        "message": {
+          "id": "m1",
+          "author": {
+            "role": "user"
+          },
+          "create_time": 1788220800.0,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Zweiter Chat im aufgeteilten Export."
+            ]
+          }
+        }
+      },
+      "m2": {
+        "id": "m2",
+        "parent": "m1",
+        "children": [],
+        "message": {
+          "id": "m2",
+          "author": {
+            "role": "assistant"
+          },
+          "create_time": 1788220801.0,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Synthetische Antwort."
+            ]
+          }
+        }
+      }
+    }
+  }
+]

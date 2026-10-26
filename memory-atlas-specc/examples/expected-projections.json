@@ -1,0 +1,48 @@
+{
+  "status": "Expected domain results, not proof of implemented projector",
+  "valid_at": "2026-10-26T16:15:00Z",
+  "known_at": "2026-10-26T16:15:00Z",
+  "claims": {
+    "clm_alpha": {
+      "curation": "accepted",
+      "temporal": "superseded",
+      "evidence_status": "source_correlated",
+      "export_allowed": false
+    },
+    "clm_beta": {
+      "curation": "accepted",
+      "temporal": "current",
+      "evidence_status": "source_correlated",
+      "export_allowed": true
+    },
+    "clm_tests": {
+      "curation": "accepted",
+      "evidence_status": "source_correlated",
+      "export_allowed": false,
+      "reason": "EXECUTION_EVIDENCE_REQUIRED"
+    },
+    "clm_language": {
+      "curation": "accepted",
+      "temporal": "current",
+      "evidence_status": "source_correlated",
+      "export_allowed": true
+    },
+    "clm_gamma": {
+      "export_allowed": false,
+      "reason": "RESEARCH_NOTES_NOT_ENABLED"
+    },
+    "clm_private": {
+      "export_allowed": false,
+      "reason": "SENSITIVE_CONTENT"
+    }
+  },
+  "historical_known_before_import": {
+    "known_at": "2026-10-25T16:15:00Z",
+    "visible_claims": 0
+  },
+  "effective_boundary": {
+    "valid_at": "2026-10-23T10:00:00Z",
+    "known_at": "2026-10-26T16:15:00Z",
+    "current_supervisor_claim": "clm_beta"
+  }
+}

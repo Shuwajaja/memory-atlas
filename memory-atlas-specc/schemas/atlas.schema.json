@@ -1,0 +1,1124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://memory-atlas.invalid/schemas/atlas/1.0.0",
+  "title": "Memory Atlas private project snapshot 1.0.0",
+  "description": "Contract only. Cross-object and policy invariants are specified in DATA_MODEL.md. The .invalid URI is an identifier, not a network dependency.",
+  "$ref": "#/$defs/AtlasSnapshot",
+  "$defs": {
+    "Scope": {
+      "type": "object",
+      "properties": {
+        "workspace_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "workspace_id",
+        "project_id",
+        "environment"
+      ],
+      "additionalProperties": false
+    },
+    "ConsumerScope": {
+      "type": "object",
+      "properties": {
+        "workspace_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "consumer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "workspace_id",
+        "project_id",
+        "environment",
+        "consumer_id",
+        "purpose"
+      ],
+      "additionalProperties": false
+    },
+    "Workspace": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "topic_policy": {
+          "type": "string",
+          "enum": [
+            "ai_projects_only"
+          ]
+        },
+        "policy_version": {
+          "const": "1.0"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "timezone",
+        "created_at",
+        "topic_policy",
+        "policy_version"
+      ],
+      "additionalProperties": false
+    },
+    "SourceFile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "chatgpt",
+            "claude",
+            "gemini",
+            "manual"
+          ]
+        },
+        "original_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "byte_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "imported_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "adapter_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "raw_text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "namespace",
+        "provider",
+        "original_name",
+        "byte_sha256",
+        "imported_at",
+        "adapter_profile",
+        "raw_text"
+      ],
+      "additionalProperties": false
+    },
+    "Diagnostic": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ]
+        },
+        "source_file_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "json_pointer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "source_file_id",
+        "json_pointer"
+      ],
+      "additionalProperties": false
+    },
+    "ImportBatch": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_file_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Diagnostic"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "source_file_ids",
+        "completed_at",
+        "adapter_version",
+        "diagnostics"
+      ],
+      "additionalProperties": false
+    },
+    "Conversation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "chatgpt",
+            "claude",
+            "gemini",
+            "manual"
+          ]
+        },
+        "external_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "created_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "source_namespace",
+        "provider",
+        "external_id",
+        "title",
+        "created_at"
+      ],
+      "additionalProperties": false
+    },
+    "Part": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "text",
+            "image_placeholder",
+            "audio_placeholder",
+            "file_placeholder",
+            "tool_placeholder",
+            "unsupported"
+          ]
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "Occurrence": {
+      "type": "object",
+      "properties": {
+        "source_file_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "import_batch_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "json_pointer": {
+          "type": "string"
+        },
+        "node_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "source_file_id",
+        "import_batch_id",
+        "json_pointer",
+        "node_id"
+      ],
+      "additionalProperties": false
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "logical_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conversation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "external_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "user",
+            "assistant",
+            "system",
+            "tool",
+            "unknown"
+          ]
+        },
+        "sent_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Part"
+          }
+        },
+        "occurrences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Occurrence"
+          }
+        }
+      },
+      "required": [
+        "revision_id",
+        "logical_id",
+        "conversation_id",
+        "external_id",
+        "role",
+        "sent_at",
+        "recorded_at",
+        "parts",
+        "occurrences"
+      ],
+      "additionalProperties": false
+    },
+    "Node": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "import_batch_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conversation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "external_node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent_node_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "child_node_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "message_revision_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "branch_membership": {
+          "type": "string",
+          "enum": [
+            "selected",
+            "alternate",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "import_batch_id",
+        "conversation_id",
+        "external_node_id",
+        "parent_node_id",
+        "child_node_ids",
+        "message_revision_id",
+        "branch_membership"
+      ],
+      "additionalProperties": false
+    },
+    "Evidence": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "part_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "start_cp": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "end_cp": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "quote": {
+          "type": "string"
+        },
+        "quote_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "relation": {
+          "type": "string",
+          "enum": [
+            "supports",
+            "refutes",
+            "context"
+          ]
+        },
+        "lineage_root_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "node_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "message_revision_id",
+        "part_index",
+        "start_cp",
+        "end_cp",
+        "quote",
+        "quote_sha256",
+        "relation",
+        "lineage_root_id",
+        "node_id"
+      ],
+      "additionalProperties": false
+    },
+    "Claim": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "decision",
+            "preference",
+            "fact",
+            "project_status",
+            "task",
+            "research_finding",
+            "open_question"
+          ]
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "user_decision",
+            "user_report",
+            "assistant_recommendation",
+            "assistant_execution_claim",
+            "tool_observation",
+            "external_reference",
+            "inference"
+          ]
+        },
+        "extraction_method": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "heuristic",
+            "llm"
+          ]
+        },
+        "modality": {
+          "type": "string",
+          "enum": [
+            "asserted",
+            "proposed",
+            "hypothetical",
+            "negated",
+            "quoted",
+            "uncertain"
+          ]
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        },
+        "subject_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "predicate": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cardinality": {
+          "type": "string",
+          "enum": [
+            "single",
+            "multiple"
+          ]
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "architecture",
+            "projects",
+            "agents",
+            "models",
+            "tools",
+            "research",
+            "workflows",
+            "costs",
+            "decisions",
+            "preferences",
+            "other_ai",
+            "excluded_private"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "asserted_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validity_kind": {
+          "type": "string",
+          "enum": [
+            "interval",
+            "timeless",
+            "unknown"
+          ]
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "validity_basis": {
+          "type": "string",
+          "enum": [
+            "explicit",
+            "reviewer_assigned",
+            "message_time_confirmed",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "kind",
+        "source_kind",
+        "extraction_method",
+        "modality",
+        "scope",
+        "subject_id",
+        "predicate",
+        "value",
+        "cardinality",
+        "category",
+        "evidence_ids",
+        "asserted_at",
+        "recorded_at",
+        "validity_kind",
+        "valid_from",
+        "valid_to",
+        "validity_basis"
+      ],
+      "additionalProperties": false
+    },
+    "Relation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "supersedes",
+            "contradicts",
+            "duplicate_of",
+            "revises",
+            "supports",
+            "related_to"
+          ]
+        },
+        "from_claim_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "to_claim_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effective_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "from_claim_id",
+        "to_claim_id",
+        "effective_at",
+        "recorded_at",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "ReviewEvent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_type": {
+          "type": "string",
+          "enum": [
+            "claim",
+            "relation",
+            "memory_set"
+          ]
+        },
+        "target_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "accept",
+            "reject",
+            "exclude",
+            "reopen",
+            "confirm_source",
+            "classify_privacy",
+            "renew_review",
+            "confirm_relation",
+            "revoke_relation",
+            "revoke_export"
+          ]
+        },
+        "actor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "context_checked": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "branch_checked": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sensitivity": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "shareable",
+                "private",
+                "secret",
+                "unknown"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "review_due_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "id",
+        "target_type",
+        "target_id",
+        "action",
+        "actor_id",
+        "recorded_at",
+        "reason",
+        "evidence_ids",
+        "context_checked",
+        "branch_checked",
+        "sensitivity",
+        "review_due_at",
+        "seq"
+      ],
+      "additionalProperties": false
+    },
+    "MemorySetDraft": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "$ref": "#/$defs/ConsumerScope"
+        },
+        "selected_claim_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "include_research_notes": {
+          "type": "boolean"
+        },
+        "max_claims": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "max_text_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16000
+        },
+        "policy_version": {
+          "const": "1.0"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "scope",
+        "selected_claim_ids",
+        "include_research_notes",
+        "max_claims",
+        "max_text_bytes",
+        "policy_version",
+        "created_at"
+      ],
+      "additionalProperties": false
+    },
+    "ExportHistory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "memory_set_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "json_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "markdown_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "approved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "actor_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "memory_set_id",
+        "payload_sha256",
+        "json_sha256",
+        "markdown_sha256",
+        "approved_at",
+        "expires_at",
+        "actor_id"
+      ],
+      "additionalProperties": false
+    },
+    "AtlasSnapshot": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "workspace": {
+          "$ref": "#/$defs/Workspace"
+        },
+        "source_files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceFile"
+          }
+        },
+        "import_batches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ImportBatch"
+          }
+        },
+        "conversations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Conversation"
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Node"
+          }
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Message"
+          }
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Claim"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Relation"
+          }
+        },
+        "reviews": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReviewEvent"
+          }
+        },
+        "memory_sets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemorySetDraft"
+          }
+        },
+        "export_history": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExportHistory"
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "snapshot_id",
+        "created_at",
+        "workspace",
+        "source_files",
+        "import_batches",
+        "conversations",
+        "nodes",
+        "messages",
+        "claims",
+        "evidence",
+        "relations",
+        "reviews",
+        "memory_sets",
+        "export_history"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

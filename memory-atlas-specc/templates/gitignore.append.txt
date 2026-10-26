@@ -1,0 +1,16 @@
+# Append after reviewing the repository's existing ignore rules.
+# Keep user data outside the repository even when ignored.
+private-data/
+local-exports/
+local-backups/
+*.atlas.json
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+.env
+.env.*
+!.env.example
+
+# Intentional synthetic fixture examples may be explicitly allowlisted by path.
+!memory-atlas-specc/examples/demo.atlas.json

@@ -1,9 +1,12 @@
 import { mkdirSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { expect, test } from '@playwright/test';
 import { chooseCard, downloadBytes, importFixtures, reviewCard, sha256 } from './helpers';
 
-const shots = resolve('/opt/cursor/artifacts/screenshots');
+const appRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+const configured = process.env.MA_SCREENSHOT_DIR?.trim();
+const shots = resolve(configured || resolve(appRoot, 'test-results/screenshots'));
 
 test('runs import, source, card, supersession, approval and export', async ({ page }) => {
   mkdirSync(shots, { recursive: true });

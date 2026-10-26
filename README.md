@@ -25,6 +25,8 @@ npm --prefix apps/web run test:e2e
 python3 memory-atlas-specc/checks/check_bundle.py
 ```
 
-Die Offline-Datei liegt danach in `apps/web/dist-offline/index.html` und ist für `file://` gebaut. Playwright prüft den Ablauf gegen die echten Fixtures in `memory-atlas-specc/fixtures`.
+Die Offline-Datei liegt danach in `apps/web/dist-offline/index.html` und ist für `file://` gebaut. Playwright prüft den Ablauf gegen die echten Fixtures in `memory-atlas-specc/fixtures`. Der Ablauf-Test schreibt Screenshots nach `apps/web/test-results/screenshots`. `MA_SCREENSHOT_DIR` setzt ein anderes Verzeichnis.
+
+Welche Anforderung welcher Test prüft, steht in `docs/TRACEABILITY.md`.
 
 Grenzen und tatsächlich ausgeführte Läufe stehen in `docs/implementation/VALIDATION.md`.

@@ -13,7 +13,7 @@ test('shows stored relations in the graph and the list', async ({ page }) => {
   const label = await claimButton.innerText();
   await claimButton.click();
   const claimText = label.replace(/^claim:\s*/, '');
-  await expect(page.locator('aside')).toContainText(claimText);
+  await expect(page.getByRole('complementary', { name: 'Quelleninspektor' })).toContainText(claimText);
 });
 
 test('disables motion when the user prefers reduced motion', async ({ page }) => {

@@ -1,21 +1,102 @@
 import type { AtlasSnapshot, ReviewEvent } from '../../domain/models.generated';
 import type { Selection } from '../../selection';
-import { useAtlas } from '../../service-context';
+import { useAtlas, useLiveQuery } from '../../service-context';
 import { useShell } from '../../selection';
 import { partText } from '../format';
+import { cardKind, dateLabel, statusTag, TOPIC_LABELS, type VisualCard } from '../overview/reference-demo';
+import { cardById, usesIllustration, visualCards } from '../overview/visual-cards';
+import { Icon } from './icons';
 
 export function Inspector() {
   const { state } = useAtlas();
-  const { selection } = useShell();
+  const at = useLiveQuery();
+  const { selection, illustratedId, inspectorOpen, setInspectorOpen } = useShell();
   const snapshot = state.snapshot;
+  const illustration = usesIllustration(snapshot);
+  const cards = visualCards(snapshot, at);
+  const illustrated = illustration ? cardById(cards, illustratedId) ?? cards[0] : undefined;
   return (
-    <aside className="inspector" aria-label="Quelleninspektor" tabIndex={0}>
-      <div className="ins-head">
-        <p className="eyebrow">Inspector</p>
-        <p className="ins-heading">{heading(snapshot, selection)}</p>
-      </div>
-      {selection ? <SelectionBody snapshot={snapshot} selection={selection} /> : <WorkspaceBody dirty={state.dirty} demo={state.demo} />}
+    <aside className={inspectorOpen ? 'inspector drawer-open' : 'inspector'} aria-label="Quelleninspektor" tabIndex={0}>
+      {illustrated ? <DemoInspector card={illustrated} cards={cards} onClose={() => setInspectorOpen(false)} /> : selection ? (
+        <>
+          <div className="ins-head">
+            <span className="ins-heading"><Icon name="eye" size={17} /> &nbsp; Inspector</span>
+            <button type="button" className="ins-close" aria-label="Inspektor schließen" onClick={() => setInspectorOpen(false)}><Icon name="x" /></button>
+            <span className="source-detail">SOURCE DETAIL</span>
+          </div>
+          <h2 className="inspector-card-title">{heading(snapshot, selection)}</h2>
+          <SelectionBody snapshot={snapshot} selection={selection} />
+        </>
+      ) : (
+        <>
+          <div className="ins-head">
+            <span className="ins-heading"><Icon name="eye" size={17} /> &nbsp; Inspector</span>
+            <button type="button" className="ins-close" aria-label="Inspektor schließen" onClick={() => setInspectorOpen(false)}><Icon name="x" /></button>
+            <span className="source-detail">SOURCE DETAIL</span>
+          </div>
+          <WorkspaceBody dirty={state.dirty} demo={state.demo} />
+        </>
+      )}
     </aside>
+  );
+}
+
+function DemoInspector({ card, cards, onClose }: { card: VisualCard; cards: readonly VisualCard[]; onClose: () => void }) {
+  const { setIllustratedId, setInspectorOpen } = useShell();
+  const relation = card.relation ? cardById(cards, card.relation) : undefined;
+  const tag = statusTag(card);
+  return (
+    <>
+      <div className="ins-head">
+        <span className="ins-heading"><Icon name="eye" size={17} /> &nbsp; Inspector</span>
+        <button type="button" className="ins-close" aria-label="Inspektor schließen" onClick={onClose}><Icon name="x" /></button>
+        <span className="source-detail">SOURCE DETAIL</span>
+      </div>
+      <div className="ins-kicker eyebrow muted">{card.demo ? 'SYNTHETISCHE DEMO-KARTE' : 'IMPORTIERTE ORIGINALQUELLE'}</div>
+      <h2 className="inspector-card-title">{card.title}</h2>
+      <div className="ins-status">
+        <span className={`status-tag ${tag.tone}`}>{tag.label}</span>
+        {card.demo ? <span className="tiny-tag">DEMO ONLY</span> : null}
+      </div>
+      <div className="ins-section">
+        <div className="ins-label">Wissensinhalt</div>
+        <p className="ins-text">{card.detail}</p>
+      </div>
+      <div className="ins-section">
+        <div className="ins-label">Provenienz</div>
+        <dl>
+          <div className="ins-pair"><dt>Typ</dt><dd>{cardKind(card)}</dd></div>
+          <div className="ins-pair"><dt>Thema</dt><dd>{TOPIC_LABELS[card.category]}</dd></div>
+          <div className="ins-pair"><dt>Quelle</dt><dd>{card.sourceTitle || card.source || 'Unbekannt'}</dd></div>
+          <div className="ins-pair"><dt>Gespräch</dt><dd>{card.sourceId || 'Keine ID'}</dd></div>
+          <div className="ins-pair"><dt>Zeit</dt><dd>{dateLabel(card.date)}</dd></div>
+        </dl>
+      </div>
+      <div className="ins-section">
+        <div className="ins-label">{card.demo ? 'Beispieltext' : 'Originalnachricht'}</div>
+        <blockquote className="source-quote">{card.sourceExcerpt || 'Quellenauszug fehlt.'}</blockquote>
+        {card.demo ? <p className="ins-note">Dies ist ausdrücklich kein exaktes Zitat eines realen Chats.</p> : null}
+      </div>
+      {relation ? (
+        <div className="ins-section">
+          <div className="ins-label">Verknüpfter Verlauf</div>
+          <button
+            type="button"
+            className="btn-muted linked-course"
+            onClick={() => { setIllustratedId(relation.id); setInspectorOpen(true); }}
+          >
+            <Icon name="branch" size={15} /> {relation.title.length > 65 ? `${relation.title.slice(0, 64)}…` : relation.title}
+          </button>
+        </div>
+      ) : null}
+      <div className="ins-section">
+        <div className="ins-label">Aktionen</div>
+        <div className="inspector-actions">
+          {card.demo ? <button type="button" className="btn-muted" disabled>Demo – keine echte Freigabe möglich</button> : null}
+        </div>
+        <p className="ins-note">{card.demo ? 'Beispielwissen fließt nie in den Export ein.' : 'Freigabe bestätigt nur die Aufnahme ins Memory, nicht die Wahrheit einer Agentenbehauptung.'}</p>
+      </div>
+    </>
   );
 }
 

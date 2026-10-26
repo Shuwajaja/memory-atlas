@@ -37,15 +37,13 @@ test('reaches navigation, source and the clear dialog from the keyboard', async 
   await expect(clear).toBeFocused();
 });
 
-test('opens the menu at 1024 and stacks at 390', async ({ page }) => {
+test('keeps import reachable at 1024 and stacks at 390', async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 768 });
   await page.goto('/');
-  await expect(page.getByRole('button', { name: 'Menü' })).toBeVisible();
-  await page.getByRole('button', { name: 'Menü' }).click();
-  await page.getByRole('link', { name: 'Import', exact: true }).click();
+  await page.getByRole('link', { name: 'Import & Export' }).click();
   await expect(page.getByRole('heading', { name: 'Import' })).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.getByRole('heading', { name: 'Memory Atlas' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Import' })).toBeVisible();
   await page.setViewportSize({ width: 1440, height: 900 });
   await expect(page.getByRole('link', { name: 'Quelle', exact: true })).toBeVisible();
 });

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { downloadBytes } from './components/download';
 import { Dialog } from './components/Dialog';
 import type { AtlasSnapshot, QueryTime } from './domain/models.generated';
 import { ChangesView } from './features/changes/ChangesView';
@@ -21,14 +22,14 @@ import { ShellProvider } from './selection';
 import { useAtlas, useLiveQuery } from './service-context';
 
 const ROUTES = [
-  ['overview', 'Überblick'],
-  ['import', 'Import'],
+  ['overview', 'Übersicht'],
+  ['import', 'Import & Export'],
   ['source', 'Quelle'],
-  ['knowledge', 'Wissenskarten'],
+  ['knowledge', 'Wissensbibliothek'],
   ['changes', 'Alt/Neu'],
-  ['timeline', 'Zeit'],
+  ['timeline', 'Zeitreise'],
   ['graph', 'Beziehungen'],
-  ['review', 'Prüfung'],
+  ['review', 'Prüflabor'],
   ['sources', 'Quellenlage'],
   ['memory', 'Freigabe'],
   ['settings', 'Einstellungen'],
@@ -55,15 +56,15 @@ function Shell() {
   const { service, state } = useAtlas();
   const liveAt = useLiveQuery();
   const [route, setRoute] = useState<RouteId>(() => parseRoute(window.location.hash));
-  const [menuOpen, setMenuOpen] = useState(false);
   const [customAt, setCustomAt] = useState<QueryTime | null>(null);
   const [pendingProject, setPendingProject] = useState<AtlasSnapshot | null>(null);
   const [openError, setOpenError] = useState<string | null>(null);
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [query, setQuery] = useState('');
+  const [help, setHelp] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const at = customAt ?? liveAt;
-  const routeLabel = ROUTES.find((item) => item[0] === route)?.[1] ?? 'Überblick';
+  const routeLabel = ROUTES.find((item) => item[0] === route)?.[1] ?? 'Übersicht';
 
   useEffect(() => {
     const onHash = () => setRoute(parseRoute(window.location.hash));
@@ -94,52 +95,43 @@ function Shell() {
         event.preventDefault();
         searchRef.current?.focus();
       }
+      if (event.key === 'Escape') setHelp(false);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  function openProject(file: File | undefined): void {
+    if (!file) return;
+    void file.text().then((text) => {
+      try {
+        setPendingProject(service.previewProject(text));
+        setOpenError(null);
+      } catch (error) {
+        setPendingProject(null);
+        setOpenError(error instanceof Error ? error.message : 'Projekt ungültig.');
+      }
+    });
+  }
+
   return (
     <div className="app-shell">
       <a className="skip" href="#inhalt">Zum Inhalt</a>
-      <Sidebar
-        route={route}
-        open={menuOpen}
-        at={at}
-        onNavigate={() => setMenuOpen(false)}
-        onOpen={(file) => {
-          if (!file) return;
-          void file.text().then((text) => {
-            try {
-              setPendingProject(service.previewProject(text));
-              setOpenError(null);
-            } catch (error) {
-              setPendingProject(null);
-              setOpenError(error instanceof Error ? error.message : 'Projekt ungültig.');
-            }
-          });
-        }}
-      />
+      <Sidebar route={route} at={at} onNavigate={() => undefined} />
       <div className="center-shell">
         <header className="topbar">
-          <div className="topbar-lead">
-            <button type="button" className="button menu-button" aria-expanded={menuOpen} aria-controls="app-nav" onClick={() => setMenuOpen((open) => !open)}>Menü</button>
-            <nav className="breadcrumb" aria-label="Brotkrumen">
-              <h1>Memory Atlas</h1>
-              <span className="breadcrumb-divider" aria-hidden="true">/</span>
-              <strong>{routeLabel}</strong>
-            </nav>
-            {state.demo ? <span className="badge-sample">Beispieldaten</span> : null}
-            {state.demo ? <p className="banner">Demo · synthetisch</p> : null}
+          <div className="breadcrumb">
+            <span>Workspace</span>
+            <span className="breadcrumb-divider">/</span>
+            <strong>{routeLabel}</strong>
           </div>
           <div className="top-actions">
-            <span className={state.dirty ? 'status warn' : 'status ok'}>{state.dirty ? 'Nicht als Datei gespeichert' : 'Datei und Sitzung stimmen überein'}</span>
             <div className="search-slot">
               <label className="search-wrap">
-                <Icon name="search" />
+                <span><Icon name="search" /></span>
                 <input
                   ref={searchRef}
-                  id="global-search"
+                  id="globalSearch"
                   type="search"
                   value={query}
                   placeholder="Wissen durchsuchen ..."
@@ -151,20 +143,26 @@ function Shell() {
               </label>
               {query.trim().length >= 2 ? <SearchPanel query={query} onPick={() => setQuery('')} /> : null}
             </div>
-            <a className="button primary" href="#/import"><Icon name="plus" /> Importieren</a>
+            <span className="top-separator" />
+            <button type="button" className="icon-button" title="So funktioniert der Prototyp" aria-label="Hilfe" onClick={() => setHelp(true)}>
+              <span><Icon name="help" /></span>
+            </button>
+            <a className="btn-primary top-import" href="#/import"><span><Icon name="plus" /></span> Importieren</a>
           </div>
         </header>
-        <main id="inhalt" className="main">
-          <p id="notice" className="live" role="status">{state.notice ?? 'Bereit.'}</p>
-          {state.error || openError ? <p id="error" className="live" role="alert">{state.error ?? openError}</p> : null}
+        <main id="inhalt" className="main-content" tabIndex={-1}>
+          <p id="notice" className="sr" role="status">{state.notice ?? 'Bereit.'}</p>
           <View route={route} at={at} custom={customAt !== null} reducedMotion={reducedMotion} onTime={setCustomAt} />
+          <SessionTools onOpen={openProject} />
         </main>
         <footer className="app-footer">
           <span>MEMORY ATLAS / EXPERIMENTAL INTERFACE</span>
-          <span><span className="footer-dot" aria-hidden="true" /> Read-only Demo-Daten · lokaler JSON-Import</span>
+          <span><span className="footer-dot" /> Read-only Demo-Daten · lokaler JSON-Import</span>
         </footer>
       </div>
       <Inspector />
+      {state.error || openError ? <div className="toast visible error" role="alert">{state.error ?? openError}</div> : null}
+      {help ? <HelpModal onClose={() => setHelp(false)} /> : null}
       {pendingProject ? (
         <Dialog title="Projekt ersetzen" onClose={() => setPendingProject(null)}>
           <p>Das geöffnete Projekt ersetzt die Sitzung. Es wird nichts zusammengeführt. Importierte Freigaben bleiben untrusted.</p>
@@ -175,6 +173,60 @@ function Shell() {
           </div>
         </Dialog>
       ) : null}
+    </div>
+  );
+}
+
+function SessionTools({ onOpen }: { onOpen: (file: File | undefined) => void }) {
+  const { service, state } = useAtlas();
+  return (
+    <div className="session-tools">
+      <button type="button" className="btn-muted" onClick={() => service.loadDemo()}>Demo laden</button>
+      <button type="button" className="btn-muted" onClick={() => { const file = service.projectBytes(); downloadBytes(file.filename, file.bytes, 'application/json'); }}>Projekt herunterladen</button>
+      <label className="btn-muted file-label">
+        Projekt öffnen
+        <input
+          className="sr"
+          type="file"
+          accept=".json,application/json"
+          onChange={(event) => {
+            const file = event.target.files?.[0];
+            event.target.value = '';
+            onOpen(file);
+          }}
+        />
+      </label>
+      <a className="btn-muted" href="#/source">Quelle</a>
+      <a className="btn-muted" href="#/memory">Freigabe</a>
+      <a className="btn-muted" href="#/graph">Beziehungen</a>
+      <a className="btn-muted" href="#/changes">Alt/Neu</a>
+      <a className="btn-muted" href="#/sources">Quellenlage</a>
+      <a className="btn-muted" href="#/settings">Einstellungen</a>
+      <a className="btn-muted" href="#/doctor">Doctor</a>
+      <span>{state.snapshot.workspace.title}</span>
+      <span>Gespräche: {state.snapshot.conversations.length}</span>
+      {state.demo ? <span>Demo · synthetisch</span> : null}
+    </div>
+  );
+}
+
+function HelpModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="modal-overlay" onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div className="eyebrow">MEMORY ATLAS / GUIDE</div>
+        <h2 id="modalTitle">So arbeitet diese Vorschau.</h2>
+        <p>Die App demonstriert eine Wissensoberfläche – sie prüft keine Live-Systeme und versendet keine Daten.</p>
+        <ul>
+          <li><strong>Wissensbibliothek:</strong> Aussagen finden, Status vergleichen, Quellen im Inspector betrachten.</li>
+          <li><strong>Zeitreise:</strong> zeigen, wann ein Plan überholt wurde.</li>
+          <li><strong>Prüflabor:</strong> offene Aussagen sichtbar halten.</li>
+          <li><strong>Import:</strong> ChatGPT-/Claude-JSON lokal laden und mögliche Nutzerentscheidungen als Kandidaten markieren.</li>
+          <li><strong>Freigabe:</strong> nur ausdrücklich genehmigte Importkandidaten als Markdown oder JSON exportieren.</li>
+        </ul>
+        <p>Derzeit werden Kandidaten über einfache Schlüsselwortregeln gewonnen. Für echte semantische Analyse, Dubletten und externe Quellenprüfung sind zusätzliche Komponenten nötig.</p>
+        <button type="button" className="btn-primary" onClick={onClose}>Verstanden <Icon name="check" /></button>
+      </div>
     </div>
   );
 }

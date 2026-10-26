@@ -17,7 +17,7 @@ test('offline file opens with no console errors and no outgoing requests', async
   });
   const html = pathToFileURL(resolve(repoRoot, 'apps/web/dist-offline/index.html')).href;
   await page.goto(html);
-  await expect(page.getByRole('heading', { name: 'Memory Atlas' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Guten Überblick.' })).toBeVisible();
   await page.getByRole('button', { name: 'Demo laden' }).click();
   await expect(page.getByText('Demo · synthetisch').first()).toBeVisible();
   await page.getByRole('link', { name: 'Freigabe' }).click();

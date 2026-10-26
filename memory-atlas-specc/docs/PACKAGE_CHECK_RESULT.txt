@@ -1,0 +1,8 @@
+PASS JSON syntax: 20 files
+PASS schema-contract subset: 2 positive and 4 negative examples
+PASS demo references, revisions, 6 evidence spans and 19 event sequences
+PASS payload, claim, state and actual exported-file digests
+PASS canonical UTF-8/SHA-256 vectors: 3
+PASS 13 fixture-case references, 30 AC IDs, 30 requirement mappings and local Markdown links
+PASS package integrity manifest: 45 files
+SUCCESS: specification bundle checks passed. No application/parser/browser/Windows tests were executed by this script.

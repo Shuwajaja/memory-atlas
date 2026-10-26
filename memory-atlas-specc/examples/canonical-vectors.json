@@ -1,0 +1,38 @@
+{
+  "algorithm": "MA-C14N-1",
+  "vectors": [
+    {
+      "name": "unicode",
+      "input": {
+        "z": "ü/\\\n😀\u0001",
+        "a": "A B C"
+      },
+      "canonical_text": "{\"a\":\"A B C\",\"z\":\"ü/\\\\\\n😀\\u0001\"}",
+      "utf8_hex": "7b2261223a2241e280a842e280a943222c227a223a22c3bc2f5c5c5c6ef09f98805c7530303031227d",
+      "sha256": "452ceaf5cff5fcaf45331bd1e7fd810d57ab366bcb2cbfdb9202ea44c0e522d7"
+    },
+    {
+      "name": "order",
+      "input": {
+        "b": 2,
+        "a": [
+          true,
+          null,
+          "é"
+        ]
+      },
+      "canonical_text": "{\"a\":[true,null,\"é\"],\"b\":2}",
+      "utf8_hex": "7b2261223a5b747275652c6e756c6c2c2265cc81225d2c2262223a327d",
+      "sha256": "930febdccf44b04bc5fd33aab32cf2a684f6e8cb65342d557c53d8c8f2fe85a0"
+    },
+    {
+      "name": "controls",
+      "input": {
+        "text": "\"\b\t\r\f/\\"
+      },
+      "canonical_text": "{\"text\":\"\\\"\\b\\t\\r\\f/\\\\\"}",
+      "utf8_hex": "7b2274657874223a225c225c625c745c725c662f5c5c227d",
+      "sha256": "06bef0b19c4e45e61e775accddeea2301b3bace4f816b0941af28487d97d8d0d"
+    }
+  ]
+}

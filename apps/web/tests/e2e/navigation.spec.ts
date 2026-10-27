@@ -2,6 +2,8 @@ import { expect, test } from '@playwright/test';
 import { importFixtures } from './helpers';
 
 test('filters six calendar months and keeps unknown times separate', async ({ page }) => {
+  // The preset is the Berlin calendar day of "now". Acceptance pins that day to 26.10.2026.
+  await page.clock.install({ time: '2026-10-26T12:00:00Z' });
   await importFixtures(page, 'chatgpt/01-linear.json', 'chatgpt/03-missing-time.json');
   await page.goto('/#/source');
   const windowText = await page.getByTestId('date-window').innerText();

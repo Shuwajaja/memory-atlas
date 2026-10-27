@@ -300,6 +300,10 @@ export function validateSnapshot(input: unknown): AtlasSnapshot {
   return snapshot;
 }
 
+export function isSyntheticSnapshot(snapshot: AtlasSnapshot): boolean {
+  return snapshot.snapshot_id === 'snap_demo' || snapshot.workspace.title.includes('synthetisch');
+}
+
 export function emptySnapshot(now: string, workspaceId = 'ws_local'): AtlasSnapshot {
   return validateSnapshot({
     schema_version: '1.0.0',

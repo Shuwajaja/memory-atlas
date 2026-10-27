@@ -9,6 +9,7 @@ import { GraphView } from './features/graph/GraphView';
 import { ImportView } from './features/import/ImportView';
 import { KnowledgeView } from './features/knowledge/KnowledgeView';
 import { MemoryView } from './features/memory-sets/MemoryView';
+import { dataOrigin, originFooter } from './features/overview/data-origin';
 import { OverviewView } from './features/overview/OverviewView';
 import { ReviewView } from './features/review/ReviewView';
 import { SettingsView } from './features/settings/SettingsView';
@@ -157,7 +158,7 @@ function Shell() {
         </main>
         <footer className="app-footer">
           <span>MEMORY ATLAS / EXPERIMENTAL INTERFACE</span>
-          <span><span className="footer-dot" /> Read-only Demo-Daten · lokaler JSON-Import</span>
+          <span><span className="footer-dot" /> {originFooter(dataOrigin(state.snapshot, state.demo))}</span>
         </footer>
       </div>
       <Inspector />
@@ -221,8 +222,8 @@ function HelpModal({ onClose }: { onClose: () => void }) {
           <li><strong>Wissensbibliothek:</strong> Aussagen finden, Status vergleichen, Quellen im Inspector betrachten.</li>
           <li><strong>Zeitreise:</strong> zeigen, wann ein Plan überholt wurde.</li>
           <li><strong>Prüflabor:</strong> offene Aussagen sichtbar halten.</li>
-          <li><strong>Import:</strong> ChatGPT-/Claude-JSON lokal laden und mögliche Nutzerentscheidungen als Kandidaten markieren.</li>
-          <li><strong>Freigabe:</strong> nur ausdrücklich genehmigte Importkandidaten als Markdown oder JSON exportieren.</li>
+          <li><strong>Import:</strong> ChatGPT-JSON lokal laden. Das Claude-Profil ist nicht freigegeben. Mögliche Nutzerentscheidungen werden als Kandidaten markiert.</li>
+          <li><strong>Freigabe:</strong> nur eine gespeicherte Auswahl, die die Exportpolicy besteht, wird nach ausdrücklicher Freigabe als Markdown oder JSON exportiert.</li>
         </ul>
         <p>Derzeit werden Kandidaten über einfache Schlüsselwortregeln gewonnen. Für echte semantische Analyse, Dubletten und externe Quellenprüfung sind zusätzliche Komponenten nötig.</p>
         <button type="button" className="btn-primary" onClick={onClose}>Verstanden <Icon name="check" /></button>

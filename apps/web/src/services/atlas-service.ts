@@ -30,7 +30,7 @@ import { instantMs } from '../domain/time';
 import { commitImport } from '../importers/normalize';
 import { parseJsonText } from '../importers/json-scan';
 import { MemoryStore } from '../store/memory-store';
-import { emptySnapshot, validateSnapshot } from '../store/snapshot';
+import { emptySnapshot, isSyntheticSnapshot, validateSnapshot } from '../store/snapshot';
 import { createSession } from './session';
 
 const systemClock: Clock = { now: () => new Date().toISOString() };
@@ -166,7 +166,7 @@ export class AtlasService {
     this.run(() => {
       commitImport(this.store, staged);
       this.staged = null;
-      this.demo = false;
+      this.demo = isSyntheticSnapshot(this.store.read());
       this.resetApproval();
       this.notice = 'Import übernommen. Das Projekt ist noch nicht als Datei gespeichert.';
       this.error = null;
@@ -397,7 +397,7 @@ export class AtlasService {
     this.resetApproval();
     this.savedDigest = this.store.currentSha256();
     this.savedAt = null;
-    this.demo = snapshot.snapshot_id === 'snap_demo' || snapshot.workspace.title.includes('synthetisch');
+    this.demo = isSyntheticSnapshot(snapshot);
     this.notice = `Projekt vom ${snapshot.created_at} geöffnet. Importierte Freigaben sind untrusted und erlauben keinen Download.`;
     this.error = null;
     this.emit();

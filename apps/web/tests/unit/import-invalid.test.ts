@@ -46,6 +46,21 @@ describe('invalid inputs', () => {
     expect(parseJsonText('{"a":"{\\"depth\\":[1]}"}').value).toEqual({ a: '{"depth":[1]}' });
   });
 
+  it('rejects an unknown JSON object as unsupported and creates no conversation from the raw text', async () => {
+    const raw = 'Rohtext ohne freigegebenes Importprofil.';
+    const bytes = new TextEncoder().encode(JSON.stringify({ note: raw, items: [{ text: raw }] }));
+    const store = new MemoryStore(emptySnapshot(fixedClock.now()));
+    const before = store.currentSha256();
+    await expect(parseImport([{ name: 'notes.json', bytes }], store.read(), defaultOptions, fixedClock, new AbortController().signal)).rejects.toMatchObject({
+      code: 'UNSUPPORTED_PROFILE',
+    });
+    const after = store.read();
+    expect(store.currentSha256()).toBe(before);
+    expect(after.conversations).toEqual([]);
+    expect(after.messages).toEqual([]);
+    expect(JSON.stringify(after)).not.toContain(raw);
+  });
+
   it('rejects invalid UTF-8, archives and oversized files without a partial store change', async () => {
     const store = new MemoryStore(emptySnapshot(fixedClock.now()));
     const before = store.currentSha256();

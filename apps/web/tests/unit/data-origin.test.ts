@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { draftMatchesStored } from '../../src/domain/export';
 import { isSyntheticSnapshot } from '../../src/store/snapshot';
-import { dataOrigin, originFooter, originMark } from '../../src/features/overview/data-origin';
+import { dataOrigin, inspectorDataLabel, legendLabel, originFooter, originMark } from '../../src/features/overview/data-origin';
 import { emptySnapshot } from '../../src/store/snapshot';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -16,11 +16,15 @@ describe('sample and inventory labels', () => {
     expect(isSyntheticSnapshot(empty)).toBe(false);
     expect(dataOrigin(empty, false)).toBe('illustration');
     expect(originMark('illustration')).toBe('PRIVATE VORSCHAU · BEISPIELDATEN');
+    expect(legendLabel('illustration')).toBe('Beispieldaten');
+    expect(inspectorDataLabel('illustration')).toBe('Beispieldaten');
     expect(originFooter('illustration')).toBe('Beispieldaten · nicht der geladene Bestand');
 
     expect(isSyntheticSnapshot(demo)).toBe(true);
     expect(dataOrigin(demo, true)).toBe('synthetic');
     expect(originMark('synthetic')).toBe('DEMO · SYNTHETISCH');
+    expect(legendLabel('synthetic')).toBe('Demo · synthetisch');
+    expect(inspectorDataLabel('synthetic')).toBe('Demo · synthetisch');
     expect(originFooter('synthetic')).toBe('Demo · synthetisch · kein echter Chat');
 
     const own = emptySnapshot('2026-10-26T16:00:00Z');
@@ -28,6 +32,8 @@ describe('sample and inventory labels', () => {
     expect(dataOrigin(own, false)).toBe('own');
     expect(originFooter('own')).toBe('Eigener Bestand · lokaler JSON-Import');
     expect(originMark('own')).toBe('GELADENER BESTAND');
+    expect(legendLabel('own')).toBe('Geladener Bestand');
+    expect(inspectorDataLabel('own')).toBe('Eigener Bestand');
   });
 
   it('treats an unsaved recipient change as not stored', () => {

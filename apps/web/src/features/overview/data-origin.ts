@@ -25,6 +25,36 @@ export function originMark(origin: DataOrigin): string {
   }
 }
 
+export function legendLabel(origin: DataOrigin): string {
+  switch (origin) {
+    case 'illustration':
+      return 'Beispieldaten';
+    case 'synthetic':
+      return 'Demo · synthetisch';
+    case 'own':
+      return 'Geladener Bestand';
+    default: {
+      const neverOrigin: never = origin;
+      return neverOrigin;
+    }
+  }
+}
+
+export function inspectorDataLabel(origin: DataOrigin): string {
+  switch (origin) {
+    case 'illustration':
+      return 'Beispieldaten';
+    case 'synthetic':
+      return 'Demo · synthetisch';
+    case 'own':
+      return 'Eigener Bestand';
+    default: {
+      const neverOrigin: never = origin;
+      return neverOrigin;
+    }
+  }
+}
+
 export function originFooter(origin: DataOrigin): string {
   switch (origin) {
     case 'illustration':

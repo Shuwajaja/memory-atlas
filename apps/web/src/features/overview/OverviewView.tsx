@@ -3,7 +3,7 @@ import { useShell } from '../../selection';
 import { useAtlas } from '../../service-context';
 import { Icon } from '../shell/icons';
 import { RadialGraph } from './RadialGraph';
-import { acceptedMetricNote, currentMetricNote, dataOrigin, originMark } from './data-origin';
+import { acceptedMetricNote, currentMetricNote, dataOrigin, legendLabel, originMark } from './data-origin';
 import { countStatuses, type ActivityRow } from './reference-demo';
 import { activityRows, visualCards } from './visual-cards';
 
@@ -78,7 +78,7 @@ export function OverviewView({ at }: OverviewViewProps) {
           </div>
           <RadialGraph cards={cards} onOpen={() => { window.location.hash = '#/knowledge'; }} />
           <div className="graph-mini-legend">
-            <span><i className="legend-mark" /> Verknüpfte Wissensräume <i className="legend-mark soft" /> {illustration ? 'Beispieldaten' : 'Geladener Bestand'}</span>
+            <span><i className="legend-mark" /> Verknüpfte Wissensräume <i className="legend-mark soft" /> {legendLabel(origin)}</span>
             <span className="graph-footnote">Graph = Themenmodell · keine KI-Auswertung</span>
           </div>
         </section>

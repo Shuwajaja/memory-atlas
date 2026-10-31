@@ -4,6 +4,7 @@ import { useAtlas, useLiveQuery } from '../../service-context';
 import { useShell } from '../../selection';
 import { partText } from '../format';
 import { cardKind, dateLabel, statusTag, TOPIC_LABELS, type VisualCard } from '../overview/reference-demo';
+import { dataOrigin, inspectorDataLabel } from '../overview/data-origin';
 import { cardById, usesIllustration, visualCards } from '../overview/visual-cards';
 import { Icon } from './icons';
 
@@ -34,7 +35,7 @@ export function Inspector() {
             <button type="button" className="ins-close" aria-label="Inspektor schließen" onClick={() => setInspectorOpen(false)}><Icon name="x" /></button>
             <span className="source-detail">SOURCE DETAIL</span>
           </div>
-          <WorkspaceBody dirty={state.dirty} demo={state.demo} />
+          <WorkspaceBody snapshot={snapshot} dirty={state.dirty} demo={state.demo} />
         </>
       )}
     </aside>
@@ -100,9 +101,8 @@ function DemoInspector({ card, cards, onClose }: { card: VisualCard; cards: read
   );
 }
 
-function WorkspaceBody({ dirty, demo }: { dirty: boolean; demo: boolean }) {
-  const { state } = useAtlas();
-  const snapshot = state.snapshot;
+function WorkspaceBody({ snapshot, dirty, demo }: { snapshot: AtlasSnapshot; dirty: boolean; demo: boolean }) {
+  const origin = dataOrigin(snapshot, demo);
   return (
     <>
       <p className="ins-text">Nichts ausgewählt. Die Werte gehören zum geladenen Arbeitsbereich.</p>
@@ -115,7 +115,7 @@ function WorkspaceBody({ dirty, demo }: { dirty: boolean; demo: boolean }) {
         <div><dt>Karten</dt><dd>{snapshot.claims.length}</dd></div>
         <div><dt>Reviews</dt><dd>{snapshot.reviews.length}</dd></div>
         <div><dt>Datei</dt><dd>{dirty ? 'Nicht als Datei gespeichert' : 'Datei und Sitzung stimmen überein'}</dd></div>
-        <div><dt>Daten</dt><dd>{demo ? 'Beispieldaten' : 'Eigener Bestand'}</dd></div>
+        <div><dt>Daten</dt><dd>{inspectorDataLabel(origin)}</dd></div>
       </dl>
     </>
   );

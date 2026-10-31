@@ -1,5 +1,6 @@
 import type { QueryTime } from '../../domain/models.generated';
 import { useAtlas } from '../../service-context';
+import { dataOrigin } from '../overview/data-origin';
 import { countStatuses } from '../overview/reference-demo';
 import { visualCards } from '../overview/visual-cards';
 import { Icon, type IconName } from './icons';
@@ -19,7 +20,8 @@ interface SidebarProps {
 
 export function Sidebar({ route, at, onNavigate }: SidebarProps) {
   const { state } = useAtlas();
-  const counts = countStatuses(visualCards(state.snapshot, at));
+  const origin = dataOrigin(state.snapshot, state.demo);
+  const counts = countStatuses(origin === 'illustration' ? [] : visualCards(state.snapshot, at));
 
   return (
     <aside className="sidebar" aria-label="Hauptnavigation">

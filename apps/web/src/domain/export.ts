@@ -179,6 +179,12 @@ export function renderMemoryMarkdown(snapshot: AtlasSnapshot, payload: MemoryPay
   return lines.join('\n');
 }
 
+export function draftMatchesStored(snapshot: AtlasSnapshot, draft: MemorySetDraft): boolean {
+  const stored = snapshot.memory_sets.find((item) => item.id === draft.id);
+  if (!stored) return false;
+  return canonicalize(stored) === canonicalize(draft);
+}
+
 function storedDraft(snapshot: AtlasSnapshot, draft: MemorySetDraft): MemorySetDraft {
   const stored = snapshot.memory_sets.find((item) => item.id === draft.id);
   if (!stored || canonicalize(stored) !== canonicalize(draft)) {

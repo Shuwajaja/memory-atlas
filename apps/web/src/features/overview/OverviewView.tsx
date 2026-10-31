@@ -3,8 +3,9 @@ import { useShell } from '../../selection';
 import { useAtlas } from '../../service-context';
 import { Icon } from '../shell/icons';
 import { RadialGraph } from './RadialGraph';
+import { acceptedMetricNote, currentMetricNote, dataOrigin, legendLabel, originMark } from './data-origin';
 import { countStatuses, type ActivityRow } from './reference-demo';
-import { activityRows, usesIllustration, visualCards } from './visual-cards';
+import { activityRows, visualCards } from './visual-cards';
 
 interface OverviewViewProps {
   at: QueryTime;
@@ -13,7 +14,8 @@ interface OverviewViewProps {
 export function OverviewView({ at }: OverviewViewProps) {
   const { state } = useAtlas();
   const { setIllustratedId, setInspectorOpen } = useShell();
-  const illustration = usesIllustration(state.snapshot);
+  const origin = dataOrigin(state.snapshot, state.demo);
+  const illustration = origin === 'illustration';
   const cards = visualCards(state.snapshot, at);
   const activity = activityRows(state.snapshot, cards, illustration);
   const counts = countStatuses(cards);
@@ -33,7 +35,7 @@ export function OverviewView({ at }: OverviewViewProps) {
         </div>
         <span className="sub-right">
           <span className="mini-dot" />
-          {illustration ? 'PRIVATE VORSCHAU · BEISPIELDATEN' : 'GELADENER BESTAND'}
+          {originMark(origin)}
         </span>
       </div>
       <div className="overview-hero">
@@ -59,8 +61,8 @@ export function OverviewView({ at }: OverviewViewProps) {
         </div>
       </div>
       <div className="metric-grid">
-        <Metric label="Wissenseinträge" value={counts.all} note={`inkl. ${counts.approved} freigegeben`} stroke="#81dcc2" />
-        <Metric label="Aktuelle Aussagen" value={counts.current} note="Demo + geprüfte Kandidaten" stroke="#80c7cf" />
+        <Metric label="Wissenseinträge" value={counts.all} note={acceptedMetricNote(origin, counts.approved)} stroke="#81dcc2" />
+        <Metric label="Aktuelle Aussagen" value={counts.current} note={currentMetricNote(origin)} stroke="#80c7cf" />
         <Metric label="Prüfung ausstehend" value={counts.review} note="mit Quellenvergleich" stroke="#ecc58a" />
         <Metric label="Historisch ersetzt" value={counts.old} note="bleiben nachvollziehbar" stroke="#d99791" />
       </div>
@@ -76,7 +78,7 @@ export function OverviewView({ at }: OverviewViewProps) {
           </div>
           <RadialGraph cards={cards} onOpen={() => { window.location.hash = '#/knowledge'; }} />
           <div className="graph-mini-legend">
-            <span><i className="legend-mark" /> Verknüpfte Wissensräume <i className="legend-mark soft" /> {illustration ? 'Beispieldaten' : 'Geladener Bestand'}</span>
+            <span><i className="legend-mark" /> Verknüpfte Wissensräume <i className="legend-mark soft" /> {legendLabel(origin)}</span>
             <span className="graph-footnote">Graph = Themenmodell · keine KI-Auswertung</span>
           </div>
         </section>
@@ -106,14 +108,16 @@ export function OverviewView({ at }: OverviewViewProps) {
           <span className="feature-icon"><Icon name="upload" size={21} /></span>
           <div className="section-kicker">SOURCE INBOX</div>
           <h3>Bring deine Chats mit.</h3>
-          <p>Importiere ChatGPT- oder Claude-JSON. Neue Erinnerungskandidaten bleiben bis zur Freigabe ungeprüft.</p>
+          <p>Importiere ChatGPT-JSON. Das Claude-Profil ist nicht freigegeben. Neue Erinnerungskandidaten bleiben bis zur Prüfung ungeprüft.</p>
           <a className="text-button" href="#/import">Zum Import <Icon name="arrow" size={12} /></a>
         </section>
       </div>
       {illustration ? (
         <div className="notice"><Icon name="info" /> Die hier gezeigten Projektkarten dienen der Illustration. Sie sind keine verifizierte aktuelle Bestandsaufnahme deiner Agenten oder GitHub-Repositories.</div>
+      ) : origin === 'synthetic' ? (
+        <div className="notice"><Icon name="info" /> Dieser Bestand ist die synthetische Demo. Er ist kein echter Chat und kein Beleg für ein laufendes System.</div>
       ) : (
-        <div className="notice"><Icon name="info" /> Der Graph folgt dem geladenen Bestand. Beispieldaten weichen, sobald Gespräche oder Wissenskarten vorliegen.</div>
+        <div className="notice"><Icon name="info" /> Der Graph folgt dem geladenen Bestand. Die Illustrationskarten sind ausgeblendet.</div>
       )}
     </>
   );

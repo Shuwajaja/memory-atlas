@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { evaluateEligibility } from '../../domain/export';
+import { draftMatchesStored, evaluateEligibility } from '../../domain/export';
 import { randomId } from '../../domain/ids';
 import type { ExportFiles, MemorySetDraft } from '../../domain/models.generated';
 import { downloadBytes } from '../../components/download';
@@ -10,7 +10,8 @@ export function MemoryView() {
   const at = useLiveQuery();
   const [draft, setDraft] = useState<MemorySetDraft>(() => freshDraft(state.snapshot.workspace.id, state.snapshot.memory_sets[0]));
   const [bundle, setBundle] = useState<{ files: ExportFiles; jsonSha: string; markdownSha: string } | null>(null);
-  const active = state.snapshot.memory_sets.find((set) => set.id === draft.id) ?? null;
+  const saved = draftMatchesStored(state.snapshot, draft);
+  const storedSetExists = state.snapshot.memory_sets.some((set) => set.id === draft.id);
 
   return (
     <section className="stack">
@@ -49,19 +50,20 @@ export function MemoryView() {
       </ul>
       <div className="row">
         <button type="button" className="button primary" onClick={() => service.saveMemorySet(draft)}>Auswahl speichern</button>
-        <button type="button" className="button" disabled={!active} onClick={() => service.prepare(draft.id)}>Vorschau erzeugen</button>
-        <button type="button" className="button" disabled={!active} onClick={() => service.reviewClaim('revoke_export', draft.id, 'Freigabe widerrufen')}>Freigabe widerrufen</button>
+        <button type="button" className="button" disabled={!saved} onClick={() => service.prepare(draft.id)}>Vorschau erzeugen</button>
+        <button type="button" className="button" disabled={!storedSetExists} onClick={() => service.reviewClaim('revoke_export', draft.id, 'Freigabe widerrufen')}>Freigabe widerrufen</button>
       </div>
-      {active ? <p className="status ok">Auswahl gespeichert.</p> : <p className="status warn">Auswahl nicht gespeichert.</p>}
+      {saved ? <p className="status ok">Auswahl gespeichert.</p> : <p className="status warn">Auswahl nicht gespeichert.</p>}
       {state.preview ? (
         <div className="card stack">
           <h2>Vorschau</h2>
+          {!saved ? <p className="status warn">Vorschau veraltet: Entwurf weicht vom gespeicherten Set ab.</p> : null}
           <p data-testid="json-sha">JSON-SHA256: {state.preview.json_sha256}</p>
           <p data-testid="markdown-sha">Markdown-SHA256: {state.preview.markdown_sha256}</p>
           <p>Vorschau gültig bis {state.preview.preview_expires_at}</p>
           <pre className="quote">{new TextDecoder().decode(state.preview.json_bytes)}</pre>
           <pre className="quote">{new TextDecoder().decode(state.preview.markdown_bytes)}</pre>
-          <button type="button" className="button primary" onClick={() => service.approve()}>Freigeben</button>
+          <button type="button" className="button primary" disabled={!saved} onClick={() => service.approve()}>Freigeben</button>
         </div>
       ) : <p className="card">Keine Vorschau.</p>}
       {state.approval ? (
@@ -71,6 +73,7 @@ export function MemoryView() {
           <button
             type="button"
             className="button primary"
+            disabled={!saved}
             onClick={() => {
               const preview = state.preview;
               const files = service.exportFiles();

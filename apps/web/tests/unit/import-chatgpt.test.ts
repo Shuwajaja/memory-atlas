@@ -1,7 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { fixtureRoot, importFiles, loadJson, messageExternalIds } from '../helpers';
+import { parseImport } from '../../src/importers/normalize';
+import { emptySnapshot } from '../../src/store/snapshot';
+import { defaultOptions, fixedClock, fixtureFile, fixtureRoot, importFiles, loadJson, messageExternalIds } from '../helpers';
 
 const cases = loadJson<{ cases: { id: string; files: string[]; expect: Record<string, unknown> }[] }>(
   resolve(fixtureRoot, 'expected/import-cases.json'),
@@ -94,5 +96,46 @@ describe('chatgpt fixtures', () => {
   it('reads the raw hostile fixture from disk', () => {
     const text = readFileSync(resolve(fixtureRoot, 'chatgpt/07-hostile.json'), 'utf8');
     expect(text).toContain('fetch');
+  });
+});
+
+describe('Windows import metadata and line endings (no filesystem access)', () => {
+  it.each([
+    'C:\\Users\\SYNTHETIC\\Export Ordner\\conversations.JSON',
+    'd:\\SYNTHETIC\\conversations.json',
+    'C:\\fakepath\\conversations.json',
+    '\\\\SYNTHETIC-SERVER\\share\\conversations.json',
+    'file:///C:/SYNTHETIC/Export%20Ordner/conversations.json',
+    'CON.json',
+    'LPT1.json',
+  ])('preserves %s as metadata without changing message identities', async (name) => {
+    const baseline = await importFiles(['chatgpt/01-linear.json']);
+    const file = { ...fixtureFile('chatgpt/01-linear.json'), name };
+    // The name is provenance, never a path to open (including reserved names).
+    const renamed = await parseImport([file], emptySnapshot(fixedClock.now()), defaultOptions, fixedClock, new AbortController().signal);
+    expect(renamed.next_snapshot.source_files[0].original_name).toBe(name);
+    expect(renamed.next_snapshot.messages.map((message) => message.revision_id)).toEqual(baseline.snapshot.messages.map((message) => message.revision_id));
+    const reimport = await parseImport([file], renamed.next_snapshot, defaultOptions, fixedClock, new AbortController().signal);
+    expect(reimport.report.new_logical_messages).toBe(0);
+    expect(reimport.report.new_revisions).toBe(0);
+    expect(reimport.next_snapshot.messages.map((message) => message.revision_id)).toEqual(baseline.snapshot.messages.map((message) => message.revision_id));
+  });
+
+  it('accepts CRLF JSON whitespace and retains CRLF inside message text', async () => {
+    const file = fixtureFile('chatgpt/01-linear.json');
+    const text = new TextDecoder().decode(file.bytes);
+    const crlf = text.replace(/\r?\n/g, '\r\n');
+    const baseline = await importFiles(['chatgpt/01-linear.json']);
+    const staged = await parseImport([{ name: 'C:\\SYNTHETIC\\conversations.json', bytes: new TextEncoder().encode(crlf) }], baseline.snapshot, defaultOptions, fixedClock, new AbortController().signal);
+    expect(staged.report.new_logical_messages).toBe(0);
+    expect(staged.report.new_revisions).toBe(0);
+    expect(staged.next_snapshot.source_files).toHaveLength(2);
+    expect(staged.next_snapshot.source_files[1].raw_text).toBe(crlf);
+
+    const messageText = 'SYNTHETIC Zeile 1\r\nZeile 2: C:\\SYNTHETIC\\CON.json';
+    const changed = crlf.replace('Für Projekt Orion nutzen wir Alpha.', JSON.stringify(messageText).slice(1, -1));
+    const revision = await parseImport([{ name: 'crlf.json', bytes: new TextEncoder().encode(changed) }], baseline.snapshot, defaultOptions, fixedClock, new AbortController().signal);
+    expect(revision.report.new_revisions).toBe(1);
+    expect(revision.next_snapshot.messages.at(-1)?.parts[0].text).toBe(messageText);
   });
 });

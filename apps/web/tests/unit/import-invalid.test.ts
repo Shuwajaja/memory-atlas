@@ -10,6 +10,18 @@ import { resolve } from 'node:path';
 import { exampleRoot } from '../helpers';
 
 describe('invalid inputs', () => {
+  it.each([
+    ['C:\\SYNTHETIC\\export.ZIP', 'ARCHIVE_NOT_SUPPORTED'],
+    ['\\\\SYNTHETIC-SERVER\\share\\export.TAR.GZ', 'ARCHIVE_NOT_SUPPORTED'],
+    ['file:///C:/SYNTHETIC/export.TGZ', 'ARCHIVE_NOT_SUPPORTED'],
+    ['C:\\SYNTHETIC\\chat.HTML', 'HTML_NOT_SUPPORTED'],
+  ])('rejects blocked suffixes in Windows-style metadata: %s', async (name, code) => {
+    const store = new MemoryStore(emptySnapshot(fixedClock.now()));
+    const before = store.currentSha256();
+    await expect(parseImport([{ ...fixtureFile('chatgpt/01-linear.json'), name }], store.read(), defaultOptions, fixedClock, new AbortController().signal)).rejects.toMatchObject({ code });
+    expect(store.currentSha256()).toBe(before);
+  });
+
   it('FI13 rejects duplicate keys before any commit', async () => {
     const store = new MemoryStore(emptySnapshot(fixedClock.now()));
     const before = store.currentSha256();
